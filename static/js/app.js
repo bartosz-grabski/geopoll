@@ -9,7 +9,8 @@ app.config(['$routeProvider',
             controller: 'PollController'
         }).
         otherwise({
-            redirectTo: '/'
+            redirectTo: '/home',
+            templateUrl: 'home'
         });
 
     }]);

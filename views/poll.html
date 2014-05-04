@@ -1,6 +1,38 @@
-<div>
-asdasd
-asdasd
-asd
-{{dupa}}
+<div class="container pagination-centered">
+	  <form class="form-signin" name="loginForm" ng-model="loginForm" novalidate>
+        <h1>Create a new poll!
+        </h1>
+
+        <!--NICK-->
+        <input name="userNick" ng-model="userNick" ng-pattern="/^[A-Za-z0-9_-]*$/" ng-minlength="3"
+        ng-maxlength="20" ng-trim="false" ng-change="userNickChange()" class="form-control"
+        placeholder="nickname" autofocus="false"
+        type="text"
+        required/>
+        <input name="userPass" ng-model="userPass"
+        ng-trim="false" class="form-control"
+        placeholder="password" autofocus="false"
+        type="text"
+        required/>
+
+        <!-- SUBMIT -->
+        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="loginForm.$invalid"
+                ng-click="submitForm()">Sign in
+        </button>
+
+        <!-- ERRORS -->
+        <alert ng-show="loginForm.$dirty && loginForm.$invalid || isInvalid">
+            <span ng-show="loginForm.userNick.$error.required">Nick is required</span>
+            <span ng-show="loginForm.userNick.$error.minlength">Nick is too short. Minimum lenght is 3</span>
+            <span ng-show="loginForm.userNick.$error.maxlength">Nick is too long. Maximum length is 20</span>
+            <span ng-show="loginForm.userNick.$error.pattern">You can use only letters, numbers, hyphen - and underscore _ </span>
+            <span ng-show="isInvalid">{{ serverMessage }}</span>
+        </alert>
+        <alert ng-show="login.success" type="success">
+            <span>{{login.message}}</span>
+        </alert>
+        <alert ng-show="login.error" type="danger">
+            <span>{{login.message}}</span>
+        </alert>
+    </form>
 </div>

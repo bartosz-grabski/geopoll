@@ -1,6 +1,6 @@
-var User = require('../model/user.js');
-var Poll = require('../model/poll.js');
-var UserPoll = require('../model/user_poll.js');
+//var User = require('../model/user.js');
+//var Poll = require('../model/poll.js');
+//var UserPoll = require('../model/user_poll.js');
 
 var index = function(req, res){
 	res.render('index');
@@ -21,12 +21,13 @@ var pollList = function(req,res) {
 };
 
 var home = function(req, res){
-    res.render('home.html');
+    res.render('home');
 }
 
 module.exports = { 
 	index: index,
 	pollGET: pollGET,
     pollPOST: pollPOST,
-    pollList: pollList
+    pollList: pollList,
+    home: home
 }
