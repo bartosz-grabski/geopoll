@@ -7,8 +7,8 @@
   },
   "dependencies": {
     "express": "3.5.1",
-    "jade": "*",
-    "mongoose": "~3.8.8"
+    "mongoose": "~3.8.8",
+    "ejs": "*"
   },
   "devDependencies": {
     "grunt-contrib-watch": "~0.6.1",
