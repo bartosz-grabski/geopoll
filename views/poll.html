@@ -1,27 +1,50 @@
 <div class="container pagination-centered">
-	  <form class="form-signin" name="loginForm" ng-model="loginForm" novalidate>
+	  
+		<script type="text/ng-template" id="confirm.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Please confirm you would like to create a poll </h3>
+        </div>
+        <div class="modal-body">
+            <div class="panel panel-default">
+                <div class="panel-heading">Name : {{poll.title}}</div>
+                    <div class="panel-body">
+                        Description : {{poll.description}}
+                    </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    	</script>	  
+        
+
         <h1>Create a new poll!
         </h1>
 
         <!--NICK-->
-        <input name="userNick" ng-model="userNick" ng-pattern="/^[A-Za-z0-9_-]*$/" ng-minlength="3"
+        <input name="pollName" ng-model="pollName" ng-pattern="/^[A-Za-z0-9_-]*$/" ng-minlength="3"
         ng-maxlength="20" ng-trim="false" ng-change="userNickChange()" class="form-control"
         placeholder="nickname" autofocus="false"
         type="text"
         required/>
-        <input name="userPass" ng-model="userPass"
+        <input name="pollDesc" ng-model="pollDesc"
         ng-trim="false" class="form-control"
         placeholder="password" autofocus="false"
-        type="text"
+        type="textarea"
         required/>
+        <p class="input-group">
+        	<input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="startDate" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+        	<span class="input-group-btn">
+        		<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+        	</span>
+        </p>
 
         <!-- SUBMIT -->
         <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="loginForm.$invalid"
-                ng-click="submitForm()">Sign in
+                ng-click="submit()">Create
         </button>
 
-        <!-- ERRORS -->
-        <alert ng-show="loginForm.$dirty && loginForm.$invalid || isInvalid">
+        <!-- <alert ng-show="loginForm.$dirty && loginForm.$invalid || isInvalid">
             <span ng-show="loginForm.userNick.$error.required">Nick is required</span>
             <span ng-show="loginForm.userNick.$error.minlength">Nick is too short. Minimum lenght is 3</span>
             <span ng-show="loginForm.userNick.$error.maxlength">Nick is too long. Maximum length is 20</span>
@@ -33,6 +56,6 @@
         </alert>
         <alert ng-show="login.error" type="danger">
             <span>{{login.message}}</span>
-        </alert>
-    </form>
+        </alert> -->
+    
 </div>
