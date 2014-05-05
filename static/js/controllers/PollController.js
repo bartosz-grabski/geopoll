@@ -1,5 +1,6 @@
 controllers.controller('PollController', function ($scope, $rootScope, $location, $modal,$log) {
 
+
 	$scope.submit = function () {
 		confirmModalCreate($modal,$scope,$log);
 	};
@@ -22,12 +23,14 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
   	$scope.open = function($event,type) {
       $event.preventDefault();
-     $event.stopPropagation();
-     if (type === 'end')
-      $scope.endOpened = true;
-    else {
-      $scope.startOpened = true;
-    }
+      $event.stopPropagation();
+      if (type === 'end') {
+        $scope.endOpened = true;
+      } else if (type === 'decl') {
+        $scope.declEndOpened = true;
+      } else {
+        $scope.startOpened = true;
+      }
   };
 
   $scope.dateOptions = {
@@ -38,6 +41,20 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
   $scope.initDate = new Date('2016-15-20');
   $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
   $scope.format = $scope.formats[0];
+
+  $scope.groups = {};
+
+  $scope.addNewGroup = function() {
+    $scope.groups[$scope.newGroup] = true;
+  };
+
+  $scope.showGroupLabel = function (group) {
+    return $scope.groups.length === 1;
+  };
+
+  $scope.deleteGroup = function(group) {
+    delete $scope.groups[group]; 
+  };
 
 });
 
