@@ -1,12 +1,9 @@
-
-/**
- * Module dependencies.
- */
-
+var dbConfig = require('./db/dbConfig.json');
 var express = require('express');
 var routes = require('./routes');
 var http = require('http');
 var path = require('path');
+var mongoose = require('mongoose');
 
 var app = express();
 
@@ -24,15 +21,17 @@ app.use(app.router);
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+    app.use(express.errorHandler());
 }
+
+http.createServer(app).listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
+});
+
+mongoose.connect('mongodb://' + dbConfig["dbHost"] + ":" + dbConfig["dbPort"] + "/" + dbConfig["dbDatabase"]);
 
 app.get('/', routes.index);
 app.get('/poll', routes.pollGET);
 app.post('/poll', routes.pollPOST);
 app.get('/polllist', routes.pollList);
 app.get('/home', routes.home);
-
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
