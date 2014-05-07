@@ -1,9 +1,17 @@
-services.factory('PollService', function ($http,$location,$window) {
+services.factory('pollService', function ($http,$location,$window) {
 
     var service = {};
     
+    /**
+    *	Sends post request to create a new poll, handles response
+    *
+    */
+    service.createPoll = function(data,onSuccess, onFailure) {
 
-    // TODO
+    	$http.post('/poll',data)
+    	.success(onSuccess)
+    	.failure(onCancel)
+    }
     
     return service;
 });

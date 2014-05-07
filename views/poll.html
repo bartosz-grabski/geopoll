@@ -95,6 +95,12 @@
         </div>
     </div>
     <div class="form-group">
+        <label for="timezone" class="col-sm-2 control-label">Timezone</label>
+        <div class="col-sm-2">
+            <select name="timezone" class="form-control" ng-model="timezone" ng-options="timezone.string for timezone in timezones" required></select>
+        </div>
+    </div>
+    <div class="form-group">
       <div class="col-sm-2">
       <button class="form-control btn btn-success" ng-click="addNewGroup()">Add another group</button>
     </div>
@@ -108,25 +114,22 @@
       </div>
     </div>
 
-  <div class="col-sm-offset-2 col-sm-10">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
     <button class="btn btn-lg" type="submit" ng-disabled="pollForm.$invalid"
     ng-click="submit()">Create
-</button>
-</div>
+    </button>
+    </div>
+  </div>
 </form>
 
-        <!-- <alert ng-show="loginForm.$dirty && loginForm.$invalid || isInvalid">
-            <span ng-show="loginForm.userNick.$error.required">Nick is required</span>
-            <span ng-show="loginForm.userNick.$error.minlength">Nick is too short. Minimum lenght is 3</span>
-            <span ng-show="loginForm.userNick.$error.maxlength">Nick is too long. Maximum length is 20</span>
-            <span ng-show="loginForm.userNick.$error.pattern">You can use only letters, numbers, hyphen - and underscore _ </span>
-            <span ng-show="isInvalid">{{ serverMessage }}</span>
-        </alert>
-        <alert ng-show="login.success" type="success">
-            <span>{{login.message}}</span>
-        </alert>
-        <alert ng-show="login.error" type="danger">
-            <span>{{login.message}}</span>
-        </alert> -->
+<div>
+<alert ng-show="pollCreationSuccess" type="success" class="col-sm-offset-2">
+    <span>{{pollCreationMessage}}</span>
+</alert>
+<alert ng-show="pollCreationError" type="danger" class="col-sm-offset-2">
+    <span>{{pollCreationMessage}}</span>
+</alert>
+</div>
 
 </div>
