@@ -10,7 +10,7 @@ services.factory('pollService', function ($http,$location,$window) {
 
     	$http.post('/poll',data)
     	.success(onSuccess)
-    	.failure(onCancel)
+    	.failure(onFailure)
     }
     
     return service;
