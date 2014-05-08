@@ -62,7 +62,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     }
 
   $scope.submit = function () {
-      modalService.confirmPollCreate(confirmed);
+      modalService.confirmPollCreate($scope.pollName, $scope.pollDesc, confirmed);
   };
 
 
