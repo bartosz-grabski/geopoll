@@ -18,7 +18,11 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         data.creator_name = $scope.creatorName;
         data.creator_mail = $scope.creatorMail;
         data.timezone = $scope.timezone;
-        data.required_groups = $scope.groups;
+
+        data.required_groups = [];
+        for (group in $scope.groups) {
+        	data.required_groups.push(group);
+        }     
 
         var startDate = $scope.startDate;
         var endDate = $scope.endDate;
