@@ -30,6 +30,7 @@ pollSchema.virtual('id')
         return this._id.toHexString();
     });
 
+
 pollSchema.generateCreationToken = function(){
     return "WE1243HSKD";
 }

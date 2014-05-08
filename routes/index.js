@@ -1,6 +1,7 @@
-//var User = require('../model/user.js');
-//var Poll = require('../model/poll.js');
-//var UserPoll = require('../model/user_poll.js');
+var User = require('../model/user.js');
+var Poll = require('../model/poll.js');
+var UserPoll = require('../model/user_poll.js');
+var emailService = require('../email/emailService.js');
 
 var index = function (req, res) {
     res.render('index');
@@ -13,6 +14,16 @@ var pollGET = function (req, res) {
 var pollPOST = function (req, res) {
     var poll = new Poll(req.body);
     poll.save();
+
+    var locals = {
+        email: poll.creator_mail,
+        subject: 'You have created a new poll',
+        poll: 'http;//localhost:3000/poll/' + poll.id,
+        editPoll: 'http;//localhost:3000/poll/' + poll.id + '#' + poll.creation_token,
+        creatorName: poll.creator_name
+    };
+
+    emailService.send('new_poll', locals, function(err, responseStatus, html, text){});
 }
 
 var pollList = function (req, res) {
