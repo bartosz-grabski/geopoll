@@ -8,9 +8,9 @@ services.factory('pollService', function ($http,$location,$window) {
     */
     service.createPoll = function(data,onSuccess, onFailure) {
 
-    	$http.post('/poll',data)
+    	$http.post('/create',data)
     	.success(onSuccess)
-    	.failure(onFailure)
+    	.error(onFailure)
     }
     
     return service;

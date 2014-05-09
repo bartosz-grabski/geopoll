@@ -3,30 +3,23 @@ var Poll = require('../model/poll.js');
 var UserPoll = require('../model/user_poll.js');
 var emailService = require('../email/emailService.js');
 
-var index = function (req, res) {
-    res.render('index');
-};
 
-var pollGET = function (req, res) {
-    res.render('poll');
-};
-
-var pollPOST = function (req, res) {
+var create = function (req, res) {
     var poll = new Poll(req.body);
     poll.save();
 
     var locals = {
         email: poll.creator_mail,
         subject: 'You have created a new poll',
-        poll: 'http;//localhost:3000/poll/' + poll.id,
-        editPoll: 'http;//localhost:3000/poll/' + poll.id + '#' + poll.creation_token,
+        poll: 'http;//localhost:3000/#/poll/' + poll.id,
+        editPoll: 'http;//localhost:3000/#/poll/' + poll.id + poll.creation_token,
         creatorName: poll.creator_name
     };
 
     emailService.send('new_poll', locals, function(err, responseStatus, html, text){});
 }
 
-var pollList = function (req, res) {
+var polls = function (req, res) {
     Poll.find({}, function (err, polls) {
         if (err) {
             console.log(err);
@@ -38,14 +31,18 @@ var pollList = function (req, res) {
 
 };
 
-var home = function(req, res){
-    res.render('home');
+var view = function(req, res) {
+	var view = req.params.view;
+	res.render(view);
+}
+
+var index = function(req, res) {
+	res.render('index');
 }
 
 module.exports = {
-    index: index,
-    pollGET: pollGET,
-    pollPOST: pollPOST,
-    pollList: pollList,
-    home: home
+	create: create,
+    polls: polls,
+    view: view,
+    index: index
 }

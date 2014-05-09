@@ -4,13 +4,17 @@ var app = angular.module('app', ['ui.bootstrap', 'ngRoute', 'geopoll.controllers
 app.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
-        when('/poll', {
-            templateUrl: 'poll',
+        when('/create', {
+            templateUrl: '/views/create',
             controller: 'PollController'
+        }).
+        when('/edit/:id', {
+        	templateUrl: '/views/edit',
+        	controller: 'EditController'
         }).
         otherwise({
             redirectTo: '/home',
-            templateUrl: 'home'
+            templateUrl: '/views/home'
         });
 
     }]);

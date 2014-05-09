@@ -31,7 +31,6 @@ http.createServer(app).listen(app.get('port'), function () {
 mongoose.connect('mongodb://' + dbConfig["dbHost"] + ":" + dbConfig["dbPort"] + "/" + dbConfig["dbDatabase"]);
 
 app.get('/', routes.index);
-app.get('/poll', routes.pollGET);
-app.post('/poll', routes.pollPOST);
-app.get('/polllist', routes.pollList);
-app.get('/home', routes.home);
+app.post('/create', routes.create);
+app.get('/polls', routes.polls);
+app.get('/views/:view', routes.view);
