@@ -29,8 +29,26 @@ var polls = function (req, res) {
             res.send(polls);
         }
     });
-
 };
+
+var pollGET = function (req, res){
+    Poll.findById(req.param('id'), function(err, poll){
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(poll);
+        }
+    });
+}
+
+var pollPUT = function (req, res){
+    Poll.findByIdAndUpdate(req.param('id'), req.body, null, function(err, poll){
+        if(errr){
+            console.log(err);
+        }
+    });
+}
 
 var view = function(req, res) {
 	var view = req.params.view;
@@ -45,5 +63,7 @@ module.exports = {
 	create: create,
     polls: polls,
     view: view,
-    index: index
+    index: index,
+    pollPUT: pollPUT,
+    pollGET: pollGET
 }

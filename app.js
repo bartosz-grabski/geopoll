@@ -32,5 +32,7 @@ mongoose.connect('mongodb://' + dbConfig["dbHost"] + ":" + dbConfig["dbPort"] + 
 
 app.get('/', routes.index);
 app.post('/create', routes.create);
+app.put('/poll/:id', routes.pollPUT);
+app.get('/poll/:id', routes.pollGET);
 app.get('/polls', routes.polls);
 app.get('/views/:view', routes.view);
