@@ -1,0 +1,34 @@
+<div class="container pagination-centered">
+
+	
+
+	<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span>Poll</span>
+				<button ng-show="poll.can_edit" ng-click="edit()" type="button" class="btn btn-primary pull-right">
+					<span class="glyphicon glyphicon-cog"></span>
+				</button>
+			</div>
+			<div class="panel-body">
+				<ul class="list-group">
+					<li class="list-group-item">Name : {{poll.name}}</li>
+					<li class="list-group-item">Description : {{poll.description}}</li>
+					<li class="list-group-item">Creator : {{poll.creator}}</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<alert ng-show="pollUpdateSuccess" type="success" class="col-sm-offset-2">
+		<span>{{messages.updateSuccess}}</span>
+	</alert>
+	<alert ng-show="pollUpdateError" type="danger" class="col-sm-offset-2">
+		<span>{{messages.updateError}}</span>
+	</alert>
+
+
+	<div class="well">There is supposed to be a timeline gui here</div>
+
+
+</div>

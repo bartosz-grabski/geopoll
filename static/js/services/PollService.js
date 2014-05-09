@@ -12,6 +12,12 @@ services.factory('pollService', function ($http,$location,$window) {
     	.success(onSuccess)
     	.error(onFailure)
     }
+
+    service.getPollInfo = function(pollId,onSuccess,onFailure) {
+    	$http.get('/poll/'+pollId)
+    	.success(onSuccess)
+    	.error(onFailure)
+    }
     
     return service;
 });
