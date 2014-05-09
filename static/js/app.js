@@ -6,11 +6,11 @@ app.config(['$routeProvider',
         $routeProvider.
         when('/create', {
             templateUrl: '/views/create',
-            controller: 'PollController'
+            controller: 'CreateController'
         }).
-        when('/edit/:id', {
-        	templateUrl: '/views/edit',
-        	controller: 'EditController'
+        when('/poll/:id', {
+        	templateUrl: '/views/poll',
+        	controller: 'PollController'
         }).
         otherwise({
             redirectTo: '/home',
