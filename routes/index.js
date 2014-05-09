@@ -17,6 +17,7 @@ var create = function (req, res) {
     };
 
     emailService.send('new_poll', locals, function(err, responseStatus, html, text){});
+    res.send(201);
 }
 
 var polls = function (req, res) {
