@@ -46,10 +46,10 @@
     <div class="form-group">
         <label for="pollStartDate" class="col-sm-2 control-label">Start date</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="modal.startDate" is-open="startOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="pollStartDate"/>
+            <input type="text" class="form-control" datepicker-popup="{{modal.format}}" ng-model="modal.startDate" is-open="modal.startOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="modal.dateOptions" date-disabled="modal.disabled(date, mode)" ng-required="true" close-text="Close" id="pollStartDate"/>
         </div>
         <div class="col-sm-1">
-          <button type="submit" class="btn btn-default btn-block" ng-click="modal.open($event,'start',$scope)"><i class="glyphicon glyphicon-calendar"></i></button>
+          <button type="submit" class="btn btn-default btn-block" ng-click="modal.open($event,'start',modal)"><i class="glyphicon glyphicon-calendar"></i></button>
         </div>
         <div class="col-sm-4">
           <timepicker ng-model="modal.startTime" show-meridian="true"></timepicker>
@@ -58,10 +58,10 @@
     <div class="form-group">
         <label for="pollEndDate" class="col-sm-2 control-label">End date</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="modal.endDate" is-open="endOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="pollEndDate"/>
+            <input type="text" class="form-control" datepicker-popup="{{modal.format}}" ng-model="modal.endDate" is-open="modal.endOpened" min-date="modal.minDate" max-date="'2015-06-22'" datepicker-options="modal.dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="pollEndDate"/>
         </div>
         <div class="col-sm-1">
-          <button type="submit" class="btn btn-default btn-block" ng-click="modal.open($event,'end',$scope)"><i class="glyphicon glyphicon-calendar"></i></button>
+          <button type="submit" class="btn btn-default btn-block" ng-click="modal.open($event,'end',modal)"><i class="glyphicon glyphicon-calendar"></i></button>
         </div>
         <div class="col-sm-4">
           <timepicker ng-model="modal.endTime" show-meridian="true"></timepicker>
@@ -70,10 +70,10 @@
     <div class="form-group">
         <label for="declEndDate" class="col-sm-2 control-label">Opened until</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="modal.declEndDate" is-open="declEndOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="declEndDate"/>
+            <input type="text" class="form-control" datepicker-popup="{{modal.format}}" ng-model="modal.declEndDate" is-open="modal.declEndOpened" min-date="modal.minDate" max-date="'2015-06-22'" datepicker-options="modal.dateOptions" date-disabled="modal.disabled(date, mode)" ng-required="true" close-text="Close" id="declEndDate"/>
         </div>
         <div class="col-sm-1">
-          <button type="submit" class="btn btn-default btn-block" ng-click="modal.open($event,'decl',$scope)"><i class="glyphicon glyphicon-calendar"></i></button>
+          <button type="submit" class="btn btn-default btn-block" ng-click="modal.open($event,'decl',modal)"><i class="glyphicon glyphicon-calendar"></i></button>
         </div>
         <div class="col-sm-4">
           <timepicker ng-model="modal.declEndTime" show-meridian="true"></timepicker>
@@ -82,12 +82,12 @@
     <div class="form-group">
         <label for="timezone" class="col-sm-3 control-label">Timezone</label>
         <div class="col-sm-3">
-            <select name="timezone" class="form-control" ng-model="modal.timezone" ng-options="timezone.string for timezone in timezones" required></select>
+            <select name="timezone" class="form-control" ng-model="modal.timezone" ng-options="timezone.string for timezone in modal.timezones" required></select>
         </div>
     </div>
     <div class="form-group">
       <div class="col-sm-2">
-      <button class="form-control btn btn-success" ng-click="addNewGroup()">Add another group</button>
+      <button class="form-control btn btn-success" ng-click="modal.addNewGroup()">Add another group</button>
     </div>
       <div class="col-sm-2s">
       <input class="form-control" minlength="3" maxlength="12" type="text" ng-model="modal.newGroup" name="" placeholder="Enter group name">
@@ -95,15 +95,15 @@
     </div>
     <div class="form-group" data-ng-repeat="(group,n) in modal.groups">
       <div class="col-sm-offset-2 col-sm-3">
-        <button class="form-control btn btn-info" value="{{group}}" ng-click="deleteGroup(group)">{{group}}</button>
+        <button class="form-control btn btn-info" value="{{group}}" ng-click="modal.deleteGroup(group)">{{group}}</button>
       </div>
     </div>
 </form>
 		</div>
 	
 		<div class="modal-footer">
-			<button class="btn btn-primary" ng-click="ok()">OK</button>
-			<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+			<button class="btn btn-primary" ng-click="modal.ok()">OK</button>
+			<button class="btn btn-warning" ng-click="modal.cancel()">Cancel</button>
 		</div>
 	</script>	
 
@@ -119,7 +119,7 @@
 				<ul class="list-group">
 					<li class="list-group-item">Name : {{poll.name}}</li>
 					<li class="list-group-item">Description : {{poll.description}}</li>
-					<li class="list-group-item">Creator : {{poll.creator}}</li>
+					<li class="list-group-item">Creator : {{poll.creator_mail}}</li>
 				</ul>
 			</div>
 		</div>

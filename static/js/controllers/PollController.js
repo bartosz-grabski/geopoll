@@ -9,7 +9,10 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
 	$scope.edit = function() {
 
-		var confirmed = function(data) {
+		var onConfirm = function(data) {
+
+			console.log(data);
+
 			pollService.updatePoll($routeParams.id,data,function() {
 				$scope.poll = data;
 				$scope.pollUpdateSuccess = true;
@@ -21,14 +24,14 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 			});
 		};
 
-		modalService.updatePoll(confirmed);
+		modalService.updatePollModal($scope.poll,onConfirm);
 	}
 
 	$scope.getPollInfo = function() {
 
 		var onSuccess = function(data) {
 			$scope.poll = data;
-			$scope.canEdit = data.can_edit;
+			$scope.canEdit = true;
 		};
 
 		var onError = function() {

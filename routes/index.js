@@ -44,7 +44,7 @@ var pollGET = function (req, res){
 
 var pollPUT = function (req, res){
     Poll.findByIdAndUpdate(req.param('id'), req.body, null, function(err, poll){
-        if(errr){
+        if(err){
             console.log(err);
         }
     });

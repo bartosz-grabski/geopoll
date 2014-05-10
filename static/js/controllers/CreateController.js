@@ -8,7 +8,7 @@ controllers.controller('CreateController', function ($scope, $rootScope, $locati
     $scope.timezones = pollService.timezones;
     var gatherPollInfo = pollService.gatherPollInfo($scope);
 
-    var confirmed = function() {
+    var onConfirm = function() {
 
         var data = gatherPollInfo($scope);
         pollService.createPoll(data,function() {
@@ -24,7 +24,7 @@ controllers.controller('CreateController', function ($scope, $rootScope, $locati
     }
 
   	$scope.submit = function () {
-    	modalService.confirmPollCreate($scope.pollName, $scope.pollDesc, confirmed);
+    	modalService.confirmPollCreateModal($scope.pollName, $scope.pollDesc, onConfirm);
   	};
 
 

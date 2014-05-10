@@ -3,14 +3,14 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 	var service = {};
 
-	var confirmPollCreateCtrl = function ($scope, $modalInstance, onSuccess, onCancel, name, description) {
+	var confirmPollCreateCtrl = function ($scope, $modalInstance, onConfirm, onCancel, name, description) {
 
 		$scope.name = name;
 		$scope.description = description;
 
 		$scope.ok = function () {
 			$modalInstance.close();
-			if (onSuccess) onSuccess();
+			if (onConfirm) onConfirm();
 		};
 
 		$scope.cancel = function () {
@@ -19,13 +19,13 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		};
 	};
 
-	service.confirmPollCreate = function(name, description, onSuccess, onCancel) {
+	service.confirmPollCreateModal = function(name, description, onConfirm, onCancel) {
 		
 		var modalInstance = $modal.open({
 			templateUrl: 'confirm.html',
 			controller: confirmPollCreateCtrl,
 			resolve: {
-				onSuccess: function() { return onSuccess },
+				onConfirm: function() { return onConfirm },
 				onCancel: function() { return onCancel },
 				name: function() { return name },
 				description: function() { return description }
@@ -39,25 +39,25 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 	}
 
-	var updatePollCtrl = function($scope, $modalInstance, onSuccess, onCancel) {
+	var updatePollCtrl = function($scope, $modalInstance, data, onConfirm, onCancel) {
 
 		$scope.modal = {}
 
 		$scope.modal.timezones = pollService.timezones;
-		$scope.modal.today = datepickerService.today($scope);
+		$scope.modal.today = datepickerService.today($scope.modal);
 
 		$scope.modal.today();
 
-		$scope.modal.startTime = $scope.dt;
-		$scope.modal.endTime = $scope.dt;
-		$scope.modal.declEndTime = $scope.dt;
+		$scope.modal.startTime = $scope.modal.dt;
+		$scope.modal.endTime = $scope.modal.dt;
+		$scope.modal.declEndTime = $scope.modal.dt;
 
-		$scope.disabled = datepickerService.disabled;
-		$scope.toggleMin = datepickerService.toggleMin($scope);
+		$scope.modal.disabled = datepickerService.disabled;
+		$scope.modal.toggleMin = datepickerService.toggleMin($scope.modal);
 
-		$scope.toggleMin();
+		$scope.modal.toggleMin();
 
-		$scope.modal.open = datepickerService.open($scope);
+		$scope.modal.open = datepickerService.open($scope.modal);
 		$scope.modal.dateOptions = datepickerService.dateOptions;
 		$scope.modal.initDate = datepickerService.initDate;
 		$scope.modal.formats = datepickerService.formats;
@@ -67,25 +67,38 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 		var gatherPollInfo = pollService.gatherPollInfo($scope.modal);
 
-		$scope.ok = function () {
+		$scope.modal.addNewGroup = function() {
+        	$scope.modal.groups[$scope.modal.newGroup] = true;
+    	};
+
+    	$scope.modal.showGroupLabel = function (group) {
+        	return $scope.modal.groups.length === 1;
+    	};
+
+    	$scope.modal.deleteGroup = function(group) {
+       		delete $scope.modal.groups[group]; 
+    	};
+
+		$scope.modal.ok = function () {
 			$modalInstance.close();
-			if (onSuccess) onSuccess(gatherPollInfo());
+			if (onConfirm) onConfirm(gatherPollInfo());
 		};
 
-		$scope.cancel = function () {
+		$scope.modal.cancel = function () {
 			$modalInstance.dismiss('cancel');
 			if (onCancel) onCancel();
 		};
 	}
 
-	service.updatePoll = function(onSuccess,onCancel) {
+	service.updatePollModal = function(data,onConfirm,onCancel) {
 
 		var modalInstance = $modal.open({
 			templateUrl: 'update.html',
 			controller: updatePollCtrl,
 			resolve: {
-				onSuccess: function() { return onSuccess },
-				onCancel: function() { return onCancel }
+				onConfirm: function() { return onConfirm },
+				onCancel: function() { return onCancel },
+				data : function() { return data }
 			}
 		});
 	}

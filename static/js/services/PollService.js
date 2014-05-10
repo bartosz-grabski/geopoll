@@ -65,6 +65,15 @@ services.factory('pollService', function ($http,$location,$window) {
     	}
     };
 
+    service.networkToGui = function(data) {
+    	var converted = {};
+
+    	
+
+
+    	return converted;
+    }
+
     service.timezones = [ 
         {string : '+05:00'},
         {string : '+06:00'}
