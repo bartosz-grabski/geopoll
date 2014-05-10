@@ -66,10 +66,21 @@ services.factory('pollService', function ($http,$location,$window) {
     };
 
     service.networkToGui = function(data) {
+    	
     	var converted = {};
 
-    	
-
+    	converted.pollName = data.name;
+    	converted.pollDesc = data.description;
+    	converted.creatorName = data.creator_name;
+    	converted.creatorMail = data.creator_mail;
+    	converted.timezone = data.timezone;
+    	converted.groups = data.required_groups;
+    	converted.endDate = new Date(data.end_time);
+		converted.endTime = new Date(data.end_time);
+		converted.startDate = new Date(data.start_time);
+		converted.startTime = new Date(data.start_time);
+		converted.declEndTime = new Date(data.declaration_end_time);
+		converted.declEndDate = new Date(data.declaration_end_time);
 
     	return converted;
     }

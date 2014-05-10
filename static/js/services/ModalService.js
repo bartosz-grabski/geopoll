@@ -41,7 +41,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 	var updatePollCtrl = function($scope, $modalInstance, data, onConfirm, onCancel) {
 
-		$scope.modal = {}
+		$scope.modal = data;
 
 		$scope.modal.timezones = pollService.timezones;
 		$scope.modal.today = datepickerService.today($scope.modal);
@@ -63,7 +63,13 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		$scope.modal.formats = datepickerService.formats;
 		$scope.modal.format = datepickerService.format;
 
-		$scope.modal.groups = {};
+		var temp = {};
+
+		for (group in $scope.modal.groups) {
+			temp[group] = true;
+		}
+
+		$scope.modal.groups = temp;
 
 		var gatherPollInfo = pollService.gatherPollInfo($scope.modal);
 

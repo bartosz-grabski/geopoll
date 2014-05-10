@@ -24,14 +24,15 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 			});
 		};
 
-		modalService.updatePollModal($scope.poll,onConfirm);
+		modalService.updatePollModal(pollService.networkToGui($scope.poll),onConfirm);
 	}
 
 	$scope.getPollInfo = function() {
 
 		var onSuccess = function(data) {
+
 			$scope.poll = data;
-			$scope.canEdit = true;
+			$scope.canEdit = data.true;
 		};
 
 		var onError = function() {
