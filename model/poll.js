@@ -2,7 +2,8 @@
 
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema
-    , ObjectId = Schema.ObjectId;
+    , ObjectId = Schema.ObjectId
+    , randtoken = require('rand-token');
 
 var pollSchema = new Schema({
     poll_id: ObjectId,
@@ -11,16 +12,16 @@ var pollSchema = new Schema({
     start_time: Date,
     end_time: Date,
     declaration_end_time: Date,
-    is_declaration_closed: {type: Boolean, "default":false},
-    creator_id: {type:String, "default": null},
-    creator_name: {type:String, "default":"guest"},
+    is_declaration_closed: {type: Boolean, "default": false},
+    creator_id: {type: String, "default": null},
+    creator_name: {type: String, "default": "guest"},
     creator_mail: String,
     creation_token: String,
     required_groups: {type: Array, "default": []}
 });
 
 
-pollSchema.pre('save', function(next){
+pollSchema.pre('save', function (next) {
     this.creation_token = pollSchema.generateCreationToken();
     next();
 })
@@ -31,8 +32,8 @@ pollSchema.virtual('id')
     });
 
 
-pollSchema.generateCreationToken = function(){
-    return "WE1243HSKD";
+pollSchema.generateCreationToken = function () {
+    return randtoken.generate(10);
 }
 
 module.exports = mongoose.model('Poll', pollSchema);
