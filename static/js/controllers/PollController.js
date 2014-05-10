@@ -1,4 +1,4 @@
-controllers.controller('PollController', function ($scope, $rootScope, $location, pollService) {
+controllers.controller('PollController', function ($scope, $rootScope, $location, pollService, modalService,$routeParams) {
 
 	$scope.messages = {
 		"pollUpdateError" : "There were problems updating your poll!",
@@ -8,26 +8,39 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 	$scope.poll = {};
 
 	$scope.edit = function() {
-		console.log('edit clicked');
+
+		var confirmed = function(data) {
+			pollService.updatePoll($routeParams.id,data,function() {
+				$scope.poll = data;
+				$scope.pollUpdateSuccess = true;
+				$scope.pollUpdateError = false;
+			},
+			function() {
+				$scope.pollUpdateError = true;
+				$scope.pollUpdateSuccess = false;
+			});
+		};
+
+		modalService.updatePoll(confirmed);
 	}
 
 	$scope.getPollInfo = function() {
 
 		var onSuccess = function(data) {
 			$scope.poll = data;
-			$scope.pollUpdateSuccess = true;
-			$scope.pollUpdateError = false;
-		}
+			$scope.canEdit = data.can_edit;
+		};
 
 		var onError = function() {
-			$scope.pollUpdateError = true;
-			$scope.pollUpdateSuccess = false;
-		}
+			
+		};
 
 
 		pollService.getPollInfo($routeParams.id,onSuccess,onError);
 
 	}
+
+	$scope.getPollInfo();
 
 
 });

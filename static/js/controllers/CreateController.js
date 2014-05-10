@@ -1,56 +1,16 @@
-controllers.controller('CreateController', function ($scope, $rootScope, $location, $modal,$log,modalService, pollService) {
+controllers.controller('CreateController', function ($scope, $rootScope, $location, $modal,$log,modalService, pollService, datepickerService) {
 
     messages = {
         "pollCreationMessageSuccess" : "Successfully created new poll!",
         "pollCreationMessageError" : "Error creating new poll!"
     }
 
-    $scope.timezones = [ 
-        {string : '+05:00'},
-        {string : '+06:00'}
-    ]
-
-    var gatherPollInfo = function () {
-        
-        var data = {};
-        data.name = $scope.pollName;
-        data.description = $scope.pollDesc;
-        data.creator_name = $scope.creatorName;
-        data.creator_mail = $scope.creatorMail;
-        data.timezone = $scope.timezone;
-
-        data.required_groups = [];
-        for (group in $scope.groups) {
-        	data.required_groups.push(group);
-        }     
-
-        var startDate = $scope.startDate;
-        var endDate = $scope.endDate;
-        var declEndDate = $scope.declEndDate;
-        var startTime = $scope.startTime;
-        var endTime = $scope.endTime;
-        var declEndTime = $scope.declEndTime;
-       
-        startDate.setHours(startTime.getHours());
-        startDate.setMinutes(startTime.getMinutes());
-
-        endDate.setHours(endTime.getHours());
-        endDate.setMinutes(endTime.getMinutes());
-
-        declEndDate.setHours(declEndTime.getHours());
-        declEndDate.setMinutes(declEndTime.getMinutes());
-
-        data.start_time = startDate;
-        data.end_time = endDate;
-        data.declaration_end_time = declEndDate;
-
-        return data;
-    }
-
+    $scope.timezones = pollService.timezones;
+    var gatherPollInfo = pollService.gatherPollInfo($scope);
 
     var confirmed = function() {
 
-        var data = gatherPollInfo();
+        var data = gatherPollInfo($scope);
         pollService.createPoll(data,function() {
             $scope.pollCreationSuccess = true;
             $scope.pollCreationError = false;
@@ -63,48 +23,30 @@ controllers.controller('CreateController', function ($scope, $rootScope, $locati
         });
     }
 
-  $scope.submit = function () {
-      modalService.confirmPollCreate($scope.pollName, $scope.pollDesc, confirmed);
-  };
+  	$scope.submit = function () {
+    	modalService.confirmPollCreate($scope.pollName, $scope.pollDesc, confirmed);
+  	};
 
 
-  $scope.today = function() {
-     $scope.dt = new Date();
- };
- $scope.today();
- $scope.startTime = $scope.dt;
- $scope.endTime = $scope.dt;
- $scope.declEndTime = $scope.dt;
+  	$scope.today = datepickerService.today($scope);
+
+ 	$scope.today();
+
+ 	$scope.startTime = $scope.dt;
+ 	$scope.endTime = $scope.dt;
+ 	$scope.declEndTime = $scope.dt;
   	// Disable weekend selection
-  	$scope.disabled = function(date, mode) {
-  		return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-  	};
 
-  	$scope.toggleMin = function() {
-  		$scope.minDate = $scope.minDate ? null : new Date();
-  	};
+  	$scope.disabled = datepickerService.disabled;
+  	$scope.toggleMin = datepickerService.toggleMin($scope);
+
   	$scope.toggleMin();
 
-  	$scope.open = function($event,type) {
-          $event.preventDefault();
-          $event.stopPropagation();
-          if (type === 'end') {
-            $scope.endOpened = true;
-        } else if (type === 'decl') {
-            $scope.declEndOpened = true;
-        } else {
-            $scope.startOpened = true;
-        }
-    };
-
-    $scope.dateOptions = {
-        formatYear: 'yy',
-        startingDay: 1
-    };
-
-    $scope.initDate = new Date('2016-15-20');
-    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-    $scope.format = $scope.formats[0];
+  	$scope.open = datepickerService.open($scope);
+    $scope.dateOptions = datepickerService.dateOptions;
+    $scope.initDate = datepickerService.initDate;
+    $scope.formats = datepickerService.formats;
+    $scope.format = datepickerService.format;
 
     $scope.groups = {};
 
