@@ -6,6 +6,7 @@ var emailService = require('../email/emailService.js');
 
 var create = function (req, res) {
     var poll = new Poll(req.body);
+    poll.creation_token = Poll.generateCreationToken();
     poll.save();
 
     var locals = {

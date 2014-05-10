@@ -20,20 +20,12 @@ var pollSchema = new Schema({
     required_groups: {type: Array, "default": []}
 });
 
-
-pollSchema.pre('save', function (next) {
-    this.creation_token = pollSchema.generateCreationToken();
-    next();
-})
-
 pollSchema.virtual('id')
     .get(function () {
         return this._id.toHexString();
     });
 
-
-pollSchema.generateCreationToken = function () {
+pollSchema.statics.generateCreationToken = function () {
     return randtoken.generate(10);
 }
-
 module.exports = mongoose.model('Poll', pollSchema);
