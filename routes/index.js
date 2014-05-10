@@ -16,7 +16,8 @@ var create = function (req, res) {
         creatorName: poll.creator_name
     };
 
-    emailService.send('new_poll', locals, function(err, responseStatus, html, text){});
+    emailService.send('new_poll', locals, function (err, responseStatus, html, text) {
+    });
     res.send(201);
 }
 
@@ -31,36 +32,59 @@ var polls = function (req, res) {
     });
 };
 
-var pollGET = function (req, res){
-    Poll.findById(req.param('id'), function(err, poll){
+var pollGET = function (req, res) {
+
+    var str = req.param('id');
+    var reg = /^([a-zA-Z0-9]{24})([a-zA-Z0-9]{10}){0,1}$/g;
+    var match = reg.exec(str);
+
+    if (match == null) {
+        res.status(404).send('Incorrect id or id and token combination');
+    }
+    else {
+        var pollID = match[1];
+        var pollToken = match[2];
+
+        Poll.findById(pollID, function (err, poll) {
+            if (err) {
+                console.log(err)
+                res.status(404).send('No poll with provided id');
+            }
+            else {
+                var pollObj = poll.toObject();
+
+                pollObj.can_edit = false;
+                if (pollToken == pollObj.creation_token) {
+                    pollObj.can_edit = true;
+                }
+
+                delete pollObj.__v;
+                delete pollObj.creation_token;
+                res.send(pollObj);
+            }
+        });
+    }
+}
+
+var pollPUT = function (req, res) {
+    Poll.findByIdAndUpdate(req.param('id'), req.body, null, function (err, poll) {
         if (err) {
             console.log(err);
         }
-        else {
-            res.send(poll);
-        }
     });
 }
 
-var pollPUT = function (req, res){
-    Poll.findByIdAndUpdate(req.param('id'), req.body, null, function(err, poll){
-        if(errr){
-            console.log(err);
-        }
-    });
+var view = function (req, res) {
+    var view = req.params.view;
+    res.render(view);
 }
 
-var view = function(req, res) {
-	var view = req.params.view;
-	res.render(view);
-}
-
-var index = function(req, res) {
-	res.render('index');
+var index = function (req, res) {
+    res.render('index');
 }
 
 module.exports = {
-	create: create,
+    create: create,
     polls: polls,
     view: view,
     index: index,
