@@ -12,8 +12,8 @@ var create = function (req, res) {
     var locals = {
         email: poll.creator_mail,
         subject: 'You have created a new poll',
-        poll: 'http;//localhost:3000/#/poll/' + poll.id,
-        editPoll: 'http;//localhost:3000/#/poll/' + poll.id + poll.creation_token,
+        poll: 'http://localhost:3000/#/poll/' + poll.id,
+        editPoll: 'http://localhost:3000/#/poll/' + poll.id + poll.creation_token,
         creatorName: poll.creator_name
     };
 
