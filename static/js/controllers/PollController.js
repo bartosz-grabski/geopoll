@@ -32,7 +32,12 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
 		var onSuccess = function(data) {
 
+			groups = {};
+			for (i in data.required_groups) {
+				groups[data.required_groups[i]] = true;
+			}
 			$scope.poll = data;
+			$scope.poll.required_groups = groups;
 			$scope.canEdit = data.can_edit;
 		};
 
