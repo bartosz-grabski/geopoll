@@ -1,0 +1,135 @@
+<div class="container pagination-centered">
+
+	<script type="text/ng-template" id="confirm.html">
+	<div class="modal-header">
+	<h3 class="modal-title">Please confirm you would like to create a poll </h3>
+	</div>
+	<div class="modal-body">
+	<div class="panel panel-default">
+	<div class="panel-heading">Name : {{name}}</div>
+	<div class="panel-body">
+	Description : {{description}}
+	</div>
+	</div>
+	<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok()">OK</button>
+	<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	</div>
+	</script>	  
+
+
+  <h1>Create a new poll!</h1>
+
+  <form class="form-horizontal" role="form" name="pollForm">
+    <div class="form-group">
+        <label for="pollName" class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+            <input name="pollName" ng-model="pollName" ng-trim="false" class="form-control"
+            placeholder="poll name" autofocus="false"
+            type="text"
+            required id="pollName"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="pollDescription" class="col-sm-2 control-label">Description</label>
+        <div class="col-sm-10">
+            <input name="pollDesc" ng-model="pollDesc"
+            ng-trim="false" class="form-control"
+            placeholder="poll description" autofocus="false"
+            type="textarea"
+            required id="pollDescription">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="creatorName" class="col-sm-2 control-label">Your name</label>
+        <div class="col-sm-10">
+            <input name="creatorName" ng-model="creatorName" ng-trim="false" class="form-control"
+            placeholder="your name" autofocus="false"
+            type="text"
+            required id="creatorName"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="creatorMail" class="col-sm-2 control-label">Your email</label>
+        <div class="col-sm-10">
+            <input name="creatorMail" ng-model="creatorMail" ng-trim="false" class="form-control"
+            placeholder="your email" autofocus="false"
+            type="text"
+            required id="creatorMail"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="pollStartDate" class="col-sm-2 control-label">Start date</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="startDate" is-open="startOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="pollStartDate"/>
+        </div>
+        <div class="col-sm-1">
+          <button type="submit" class="btn btn-default btn-block" ng-click="open($event,'start')"><i class="glyphicon glyphicon-calendar"></i></button>
+        </div>
+        <div class="col-sm-2">
+          <timepicker ng-model="startTime" show-meridian="true"></timepicker>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="pollEndDate" class="col-sm-2 control-label">End date</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="endDate" is-open="endOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="pollEndDate"/>
+        </div>
+        <div class="col-sm-1">
+          <button type="submit" class="btn btn-default btn-block" ng-click="open($event,'end')"><i class="glyphicon glyphicon-calendar"></i></button>
+        </div>
+        <div class="col-sm-2">
+          <timepicker ng-model="endTime" show-meridian="true"></timepicker>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="declEndDate" class="col-sm-2 control-label">Opened until</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="declEndDate" is-open="declEndOpened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" id="declEndDate"/>
+        </div>
+        <div class="col-sm-1">
+          <button type="submit" class="btn btn-default btn-block" ng-click="open($event,'decl')"><i class="glyphicon glyphicon-calendar"></i></button>
+        </div>
+        <div class="col-sm-2">
+          <timepicker ng-model="declEndTime" show-meridian="true"></timepicker>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="timezone" class="col-sm-2 control-label">Timezone</label>
+        <div class="col-sm-2">
+            <select name="timezone" class="form-control" ng-model="timezone" ng-options="timezone.string for timezone in timezones" required></select>
+        </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-2">
+      <button class="form-control btn btn-success" ng-click="addNewGroup()">Add another group</button>
+    </div>
+      <div class="col-sm-2">
+      <input class="form-control" minlength="3" maxlength="12" type="text" ng-model="newGroup" name="" placeholder="Enter group name">
+    </div>
+    </div>
+    <div class="form-group" data-ng-repeat="(group,n) in groups">
+      <div class="col-sm-offset-2 col-sm-2">
+        <button class="form-control btn btn-info" value="{{group}}" ng-click="deleteGroup(group)">{{group}}</button>
+      </div>
+    </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+    <button class="btn btn-lg" type="submit" ng-disabled="pollForm.$invalid"
+    ng-click="submit()">Create
+    </button>
+    </div>
+  </div>
+</form>
+
+<div>
+<alert ng-show="pollCreationSuccess" type="success" class="col-sm-offset-2">
+    <span>{{pollCreationMessage}}</span>
+</alert>
+<alert ng-show="pollCreationError" type="danger" class="col-sm-offset-2">
+    <span>{{pollCreationMessage}}</span>
+</alert>
+</div>
+
+</div>
