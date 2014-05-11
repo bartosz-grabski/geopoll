@@ -10,7 +10,8 @@
     "mongoose": "~3.8.8",
     "ejs": "*",
     "nodemailer": "*",
-    "email-templates" : "*"
+    "email-templates" : "*",
+    "rand-token" : "*"
   },
   "devDependencies": {
     "grunt-contrib-watch": "~0.6.1",
