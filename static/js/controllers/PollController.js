@@ -32,7 +32,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 		var onSuccess = function(data) {
 
 			$scope.poll = data;
-			$scope.canEdit = data.true;
+			$scope.canEdit = data.can_edit;
 		};
 
 		var onError = function() {
