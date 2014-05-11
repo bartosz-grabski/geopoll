@@ -35,7 +35,7 @@ var polls = function (req, res) {
 
 var pollGET = function (req, res) {
 
-    if (!Poll.isIDWithTokenFormatCorrect(req.param('id'))) {
+    if (!Poll.isIDWithOrWithoutTokenFormatCorrect(req.param('id'))) {
         res.status(404).send('Incorrect id or id and token combination');
     }
     else {
