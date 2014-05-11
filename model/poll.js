@@ -25,7 +25,33 @@ pollSchema.virtual('id')
         return this._id.toHexString();
     });
 
+pollSchema.virtual('idWithToken').get(function () {
+    return this._id.toHexString() + this.creation_token;
+})
+
+pollSchema.statics.isIDWithTokenFormatCorrect = function(idWithToken){
+    var match = getMatch(idWithToken);
+    return (match!=null);
+}
+
+pollSchema.statics.extractID = function(idWithToken){
+    var match = getMatch(idWithToken);
+    return match[1];
+}
+
+pollSchema.statics.extractToken = function(idWithToken){
+    var match = getMatch(idWithToken);
+    return match[2];
+}
+
 pollSchema.statics.generateCreationToken = function () {
     return randtoken.generate(10);
 }
+
+function getMatch(str){
+    var reg = /^([a-zA-Z0-9]{24})([a-zA-Z0-9]{10}){0,1}$/g;
+    return reg.exec(str);
+}
+
+
 module.exports = mongoose.model('Poll', pollSchema);

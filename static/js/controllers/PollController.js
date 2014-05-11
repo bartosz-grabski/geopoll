@@ -13,6 +13,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
 			console.log(data);
 
+            console.log($routeParams.id);
 			pollService.updatePoll($routeParams.id,data,function() {
 				$scope.poll = data;
 				$scope.pollUpdateSuccess = true;

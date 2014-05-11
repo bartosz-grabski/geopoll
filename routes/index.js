@@ -13,7 +13,7 @@ var create = function (req, res) {
         email: poll.creator_mail,
         subject: 'You have created a new poll',
         poll: 'http://localhost:3000/#/poll/' + poll.id,
-        editPoll: 'http://localhost:3000/#/poll/' + poll.id + poll.creation_token,
+        editPoll: 'http://localhost:3000/#/poll/' + poll.idWithToken,
         creatorName: poll.creator_name
     };
 
@@ -35,16 +35,12 @@ var polls = function (req, res) {
 
 var pollGET = function (req, res) {
 
-    var str = req.param('id');
-    var reg = /^([a-zA-Z0-9]{24})([a-zA-Z0-9]{10}){0,1}$/g;
-    var match = reg.exec(str);
-
-    if (match == null) {
+    if (!Poll.isIDWithTokenFormatCorrect(req.param('id'))) {
         res.status(404).send('Incorrect id or id and token combination');
     }
     else {
-        var pollID = match[1];
-        var pollToken = match[2];
+        var pollID = Poll.extractID(req.param('id'));
+        var pollToken = Poll.extractToken(req.param('id'));
 
         Poll.findById(pollID, function (err, poll) {
             if (err) {
@@ -68,11 +64,17 @@ var pollGET = function (req, res) {
 }
 
 var pollPUT = function (req, res) {
-    Poll.findByIdAndUpdate(req.param('id'), req.body, null, function (err, poll) {
-        if (err) {
-            console.log(err);
-        }
-    });
+    if (!Poll.isIDWithTokenFormatCorrect(req.param('id'))) {
+        res.status(400).send('Malformed request');
+    }
+    else {
+        Poll.findByIdAndUpdate(Poll.extractID(req.param('id')), req.body, null, function (err, poll) {
+            if (err) {
+                console.log(err);
+                res.status(403);
+            }
+        });
+    }
 }
 
 var view = function (req, res) {
