@@ -2,6 +2,8 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
 
     Timeline._Band.prototype._onDblClick = function(innerFrame, evt, target) {
+
+    	var debugg = this.pixelOffsetToDate(evt.offsetX);
         eventSource1.loadJSON(timeline_data, '.');
         eventSource1._fire("onAddMany", []);
         tl.layout();
@@ -127,7 +129,6 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         bandInfos[3].syncWith = 0;
         bandInfos[1].highlight = true;
         tl = Timeline.create(document.getElementById("tl"), bandInfos);
-
 
     }
 
