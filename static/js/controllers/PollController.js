@@ -1,5 +1,12 @@
 controllers.controller('PollController', function ($scope, $rootScope, $location, $window, pollService, modalService, $routeParams) {
 
+
+    Timeline._Band.prototype._onDblClick = function(innerFrame, evt, target) {
+        eventSource1.loadJSON(timeline_data, '.');
+        eventSource1._fire("onAddMany", []);
+        tl.layout();
+    };
+
     $scope.messages = {
         "pollUpdateError": "There were problems updating your poll!",
         "pollUpdateSuccess": "Poll successfully updated!"
@@ -84,12 +91,6 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         ]
     };
 
-
-    function displayEvent() {
-        eventSource1._fire("onAddMany", []);
-        tl.layout();
-    }
-
     var tl;
     var eventSource1;
 
@@ -128,10 +129,6 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         tl = Timeline.create(document.getElementById("tl"), bandInfos);
 
 
-        eventSource1.loadJSON(timeline_data, '.');
-        eventSource1._fire("onAddMany", []);
-        displayEvent();
-        tl.layout();
     }
 
     var resizeTimerID = null;
