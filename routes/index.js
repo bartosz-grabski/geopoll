@@ -82,6 +82,11 @@ var view = function (req, res) {
     res.render(view);
 }
 
+var modal = function (req,res) {
+	var modal = req.params.modal
+	res.render("modals/"+modal)
+}
+
 var index = function (req, res) {
     res.render('index');
 }
@@ -90,6 +95,7 @@ module.exports = {
     create: create,
     polls: polls,
     view: view,
+    modal: modal,
     index: index,
     pollPUT: pollPUT,
     pollGET: pollGET

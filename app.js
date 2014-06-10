@@ -36,3 +36,4 @@ app.put('/poll/:id', routes.pollPUT);
 app.get('/poll/:id', routes.pollGET);
 app.get('/polls', routes.polls);
 app.get('/views/:view', routes.view);
+app.get('/views/modals/:modal', routes.modal);

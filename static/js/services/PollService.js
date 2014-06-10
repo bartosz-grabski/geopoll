@@ -89,6 +89,14 @@ services.factory('pollService', function ($http,$location,$window) {
         {string : '+05:00'},
         {string : '+06:00'}
     ]
+
+
+    // user poll related functions
+
+    service.updateUserPoll = function() {
+    	//TODO
+    	console.log("[INFO] updateUserPoll")
+    }
     
     return service;
 });

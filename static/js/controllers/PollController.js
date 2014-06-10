@@ -146,4 +146,11 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     onLoad();
 
 
+    // new entry, save entry functions
+
+    $scope.newUserPoll = function() {
+    	modalService.newUserPollModal(function() {}, function() {});
+    }
+
+
 });

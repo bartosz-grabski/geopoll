@@ -22,7 +22,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 	service.confirmPollCreateModal = function(name, description, onConfirm, onCancel) {
 		
 		var modalInstance = $modal.open({
-			templateUrl: 'confirm.html',
+			templateUrl: 'views/modals/create',
 			controller: confirmPollCreateCtrl,
 			resolve: {
 				onConfirm: function() { return onConfirm },
@@ -99,12 +99,29 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 	service.updatePollModal = function(data,onConfirm,onCancel) {
 
 		var modalInstance = $modal.open({
-			templateUrl: 'update.html',
+			templateUrl: 'views/modals/update',
 			controller: updatePollCtrl,
 			resolve: {
 				onConfirm: function() { return onConfirm },
 				onCancel: function() { return onCancel },
 				data : function() { return data }
+			}
+		});
+	}
+
+	var userPollCtrl = function($scope, $modalInstance, onConfirm, onCancel) {
+
+	}
+
+
+	service.newUserPollModal = function(onConfirm, onCancel) {
+
+		var modalInstance = $modal.open({
+			templateUrl: 'views/modals/userpoll',
+			controller: userPollCtrl,
+			resolve: {
+				onConfirm: function() { return onConfirm },
+				onCancel: function() { return onCancel },
 			}
 		});
 	}
