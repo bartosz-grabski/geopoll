@@ -5,6 +5,11 @@ body {
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
+
+.pointer {
+    cursor: pointer;
+}
+
 .header,
 .marketing,
 .footer {

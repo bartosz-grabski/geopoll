@@ -1,5 +1,5 @@
 <div class="container pagination-centered">
-	
+
 	<div class="container">
 		<div class="row">
 			<div class="panel panel-default">
@@ -29,8 +29,8 @@
 		<div id="tl" style="height: 350px; border: 1px solid #aaa; margin-bottom: 15px"></div>
 		<div id="container">
 			<ul class="nav nav-pills pull-right">
-				<li class="active" ng-click="newUserPoll()"><a>New</a></li>
-				<li><a ng-click="saveUserPoll()">Save</a></li>
+				<li ng-class="{pointer: !addPhase, active: !addPhase}"><a ng-click="newUserPoll()">New</a></li>
+				<li ng-class="{pointer: addPhase, active: addPhase}"><a ng-click="saveUserPoll()">Save</a></li>
 			</ul>
 		</div>
 	</div>

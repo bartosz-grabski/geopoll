@@ -111,6 +111,27 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 	var userPollCtrl = function($scope, $modalInstance, onConfirm, onCancel) {
 
+		$scope.modal = {};
+		$scope.modal.groups = {};
+
+		$scope.modal.deleteGroup = function(group) {
+			delete $scope.modal.groups[group];
+		}
+
+		$scope.modal.addGroup = function() {
+			if ($scope.modal.newGroup && $scope.modal.newGroup !== "") {
+				$scope.modal.groups[$scope.modal.newGroup] = true;
+			}
+		}
+
+		$scope.modal.ok = function() {
+			$modalInstance.close($scope.modal.username);
+		}
+
+		$scope.modal.cancel = function() {
+			$modalInstance.dismiss('cancel');
+		}
+
 	}
 
 
@@ -124,6 +145,8 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 				onCancel: function() { return onCancel },
 			}
 		});
+
+		modalInstance.result.then(onConfirm, onCancel)
 	}
 
 	return service;
