@@ -8,6 +8,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     }
 
     $scope.poll = {};
+    $scope.userPolls = [];
 
     $scope.edit = function () {
 
@@ -30,7 +31,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         modalService.updatePollModal(pollService.networkToGui($scope.poll), onConfirm);
     }
 
-    $scope.getPollInfo = function () {
+    function getPollInfo() {
 
         var onSuccess = function (data) {
 
@@ -52,8 +53,6 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     }
 
-    $scope.getPollInfo();
-
     // new entry, save entry functions
 
     $scope.newUserPoll = function() {
@@ -74,8 +73,24 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     }
 
+
+    function getUserPolls() {
+
+    	var onSuccess = function(userPolls) {
+    		timelineService.loadEvents(userPolls);
+    	}
+
+    	var onFailure = function() {
+
+    	}
+
+    	pollService.getUserPolls($routeParams.id,onSuccess,onFailure);
+
+    }
+
     timelineService.load();
-    timelineService.loadEvents();
+    getPollInfo();
+	getUserPolls();    
 
 
 });

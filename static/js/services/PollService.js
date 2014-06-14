@@ -93,9 +93,16 @@ services.factory('pollService', function ($http,$location,$window) {
 
     // user poll related functions
 
-    service.updateUserPoll = function() {
+    service.newUserPoll = function(poll, onSuccess, onFailure) {
     	//TODO
-    	console.log("[INFO] updateUserPoll")
+    	//$http.post("/")
+    }
+
+
+    service.getUserPolls = function(pollId, onSuccess, onFailure) {
+    	$http.get("/userpolls/"+pollId)
+    	.success(onSuccess)
+    	.error(onFailure)
     }
     
     return service;

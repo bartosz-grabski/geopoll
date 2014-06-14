@@ -77,6 +77,31 @@ var pollPUT = function (req, res) {
     }
 }
 
+var userPollGET = function (req, res) {
+	if (!Poll.isIDWithOrWithoutTokenFormatCorrect(req.param('poll_id'))) {
+		res.status(404).send('Incorrect id or id and token combination');
+	} else {
+		var pollId = Poll.extractID(req.param('poll_id'));
+		console.log(pollId);
+		UserPoll.find( { poll_id : pollId }, function (err, userPolls) {
+			if (err) {
+                console.log(err)
+                res.status(404).send('No poll with provided id');
+			} else {
+				var userPollObjects = userPolls;
+				res.send(userPollObjects);
+			}
+		});
+	}
+}
+
+var userPollPOST = function(req, res) {
+	console.log('asd');
+	var	userPoll = UserPoll();
+	userPoll.save();
+	res.send(201);
+}
+
 var view = function (req, res) {
     var view = req.params.view;
     res.render(view);
@@ -98,5 +123,7 @@ module.exports = {
     modal: modal,
     index: index,
     pollPUT: pollPUT,
-    pollGET: pollGET
+    pollGET: pollGET,
+    userPollPOST: userPollPOST,
+    userPollGET: userPollGET
 }
