@@ -25,10 +25,10 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			templateUrl: 'views/modals/create',
 			controller: confirmPollCreateCtrl,
 			resolve: {
-				onConfirm: function() { return onConfirm },
-				onCancel: function() { return onCancel },
-				name: function() { return name },
-				description: function() { return description }
+				onConfirm: function() { return onConfirm; },
+				onCancel: function() { return onCancel; },
+				name: function() { return name; },
+				description: function() { return description; }
 			}
 		});
 
@@ -37,7 +37,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			$log.info('Modal dismissed at: ' + new Date());
 		});
 
-	}
+	};
 
 	var updatePollCtrl = function($scope, $modalInstance, data, onConfirm, onCancel) {
 
@@ -65,7 +65,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 		var temp = {};
 
-		for (group in $scope.modal.groups) {
+		for (var group in $scope.modal.groups) {
 			temp[group] = true;
 		}
 
@@ -94,7 +94,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			$modalInstance.dismiss('cancel');
 			if (onCancel) onCancel();
 		};
-	}
+	};
 
 	service.updatePollModal = function(data,onConfirm,onCancel) {
 
@@ -102,12 +102,12 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			templateUrl: 'views/modals/update',
 			controller: updatePollCtrl,
 			resolve: {
-				onConfirm: function() { return onConfirm },
-				onCancel: function() { return onCancel },
-				data : function() { return data }
+				onConfirm: function() { return onConfirm; },
+				onCancel: function() { return onCancel; },
+				data : function() { return data; }
 			}
 		});
-	}
+	};
 
 	var userPollCtrl = function($scope, $modalInstance, onConfirm, onCancel) {
 
@@ -116,13 +116,13 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 		$scope.modal.deleteGroup = function(group) {
 			delete $scope.modal.groups[group];
-		}
+		};
 
 		$scope.modal.addGroup = function() {
 			if ($scope.modal.newGroup && $scope.modal.newGroup !== "") {
 				$scope.modal.groups[$scope.modal.newGroup] = true;
 			}
-		}
+		};
 
 		$scope.modal.ok = function() {
 			var username = $scope.modal.username;
@@ -131,13 +131,13 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 				groups.push(g);
 			}
 			$modalInstance.close({username:username, groups:groups});
-		}
+		};
 
 		$scope.modal.cancel = function() {
 			$modalInstance.dismiss('cancel');
-		}
+		};
 
-	}
+	};
 
 
 	service.newUserPollModal = function(onConfirm, onCancel) {
@@ -146,13 +146,13 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			templateUrl: 'views/modals/userpoll',
 			controller: userPollCtrl,
 			resolve: {
-				onConfirm: function() { return onConfirm },
-				onCancel: function() { return onCancel },
+				onConfirm: function() { return onConfirm; },
+				onCancel: function() { return onCancel; },
 			}
 		});
 
-		modalInstance.result.then(onConfirm, onCancel)
-	}
+		modalInstance.result.then(onConfirm, onCancel);
+	};
 
 
 	var userEventCtrl = function($scope, $modalInstance, selectedTimestamp) {
@@ -166,15 +166,15 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			var result = {
 				duration : $scope.modal.duration,
 				selectedTimestamp : selectedTimestamp
-			}
+			};
 			$modalInstance.close($scope.modal);
-		}
+		};
 
 		$scope.modal.cancel = function() {
 			$modalInstance.dismiss('cancel');
-		}
+		};
 
-	}
+	};
 
 
 	service.newUserEventModal = function(onConfirm, onCancel, selectedTimestamp) {	
@@ -189,7 +189,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 		modalInstance.result.then(onConfirm,onCancel);
 
-	}
+	};
 
 	return service;
 });

@@ -8,8 +8,8 @@ var templatesDir = path.resolve(__dirname, '..', 'views/email');
 var defaultTransport = nodemailer.createTransport('SMTP', {
     service: 'Gmail',
     auth: {
-        user: emailConfig["user"],
-        pass: emailConfig["pass"]
+        user: emailConfig.user,
+        pass: emailConfig.pass
     }
 });
 
@@ -22,7 +22,7 @@ exports.send = function (templateName, locals, fn) {
         template(templateName, locals, function (err, html, text) {
             var transport = defaultTransport;
             transport.sendMail({
-                from: emailConfig["defaultFromAddress"],
+                from: emailConfig.defaultFromAddress,
                 to: locals.email,
                 subject: locals.subject,
                 html: html,
@@ -35,5 +35,5 @@ exports.send = function (templateName, locals, fn) {
             });
         });
     });
-}
+};
 

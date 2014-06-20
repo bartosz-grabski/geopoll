@@ -1,6 +1,6 @@
 services.factory('timelineService', function ($http,$location,$window, modalService) {
 
-	var service = {}
+	var service = {};
 	var doubleClick = false;
 	var username = "asd";
 	var groups = [];
@@ -9,7 +9,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	var serviceData = {
 		username : "",
 		events : []
-	}
+	};
 
 	var colors = {
 		"yes" 	: "green",
@@ -24,14 +24,14 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 			'title' : title,
 			'description' : description,
 			'color' : color
-		}
-	}
+		};
+	};
 
 	//hack to override closure, when function is declared the containing scope is captured
 	//thus it does not resolve username properly (only reffering to the value it first encountered)
 	var onEventConfirmed = function(result) {
 
-		console.log(serviceData.username)
+		console.log(serviceData.username);
 		console.log("[INFO] Event creation confirmed");
 		var duration = result.duration;
 		var start = result.selectedTimestamp;
@@ -41,21 +41,21 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		var newEvent = eventFromData(start,end,serviceData.username,"sample","blue");
 		serviceData.events.push({timeStart:start, timeEnd:end, type:"blue"});
 
-		eventSource1.loadJSON({ "events":[newEvent] , "dateTimeFormat":"iso8601"}, '.')
+		eventSource1.loadJSON({ "events":[newEvent] , "dateTimeFormat":"iso8601"}, '.');
 
 
-	}
+	};
 
 	var onEventCanceled = function() {
 		console.log("[INFO] Event creation was cancelled");
-	}
+	};
 
 
 	Timeline._Band.prototype._onDblClick = function(innerFrame, evt, target) {
 		
 		if (doubleClick) {
 			var selectedTimestamp = this.pixelOffsetToDate(evt.offsetX);
-			modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp)
+			modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp);
 		}
 
 	};
@@ -101,7 +101,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	var resizeTimerID = null;
 
 	function onResize() {
-		if (resizeTimerID == null) {
+		if (resizeTimerID === null) {
 			resizeTimerID = $window.setTimeout(function () {
 				resizeTimerID = null;
 				tl.layout();
@@ -126,7 +126,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 					//end: "Jun 9 2014 21:30:00 GMT",
 					title : userPoll.user_name,
 					color : colors[userPoll.time_slots[j].type]
-				}
+				};
 				events.push(userPollEvent);
 			}	
 		}
@@ -140,35 +140,35 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		console.log(userPollEvents);
 		eventSource1.loadJSON({ "events":userPollEvents , "dateTimeFormat":"iso8601"}, '.');
 		tl.layout();
-	}
+	};
 
 	service.load = function() {
 		onLoad();
-	}
+	};
 
 	service.reload = function() {
 
-	}
+	};
 
 	service.enableTimeline = function(username) {
 		console.log(username);
 		doubleClick = true;
 		serviceData.username = username;
 		serviceData.events = [];
-	}
+	};
 
 	service.disableTimeline = function() {
 		doubleClick = false;
-	}
+	};
 
 	service.getEvents = function() {
 		return serviceData.events;
-	}
+	};
 
 	service.getEventsAndDisableTimeline = function() {
 		service.disableTimeline();
 		return service.getEvents();
-	}
+	};
 
 
 

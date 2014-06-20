@@ -5,7 +5,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     $scope.messages = {
         "pollUpdateError": "There were problems updating your poll!",
         "pollUpdateSuccess": "Poll successfully updated!"
-    }
+    };
 
     $scope.poll = {};
     $scope.userPolls = [];
@@ -29,14 +29,14 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         };
 
         modalService.updatePollModal(pollService.networkToGui($scope.poll), onConfirm);
-    }
+    };
 
     function getPollInfo() {
 
         var onSuccess = function (data) {
 
             groups = {};
-            for (i in data.required_groups) {
+            for (var i in data.required_groups) {
                 groups[data.required_groups[i]] = true;
             }
             $scope.poll = data;
@@ -64,9 +64,9 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     		console.log("[INFO] The newUserPoll modal was confirmed");
     		timelineService.enableTimeline(username);
     	}, function() {
-    		console.log("[INFO] The newUserPoll modal was dismissed")
+    		console.log("[INFO] The newUserPoll modal was dismissed");
     	});
-    }
+    };
 
     $scope.saveUserPoll = function() {
 
@@ -77,16 +77,16 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     	var onSuccess = function() {
     		console.log("[INFO] UserPoll was created!");
-    	}
+    	};
 
     	var onCancel = function() {
     		console.log("[INFO] UserPoll failed to create");
-    	}
+    	};
 
     	pollService.newUserPoll(userPoll, onSuccess, onCancel);
-    	delete $scope.username
+    	delete $scope.username;
 
-    }
+    };
 
     function createUserPollFromEvents(events) {
 
@@ -104,11 +104,11 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     	var onSuccess = function(userPolls) {
     		timelineService.loadEvents(userPolls);
-    	}
+    	};
 
     	var onFailure = function() {
 
-    	}
+    	};
 
     	pollService.getUserPolls($routeParams.id,onSuccess,onFailure);
 

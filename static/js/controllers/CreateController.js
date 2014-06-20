@@ -3,7 +3,7 @@ controllers.controller('CreateController', function ($scope, $rootScope, $locati
     messages = {
         "pollCreationMessageSuccess" : "Successfully created new poll!",
         "pollCreationMessageError" : "Error creating new poll!"
-    }
+    };
 
     $scope.timezones = pollService.timezones;
     var gatherPollInfo = pollService.gatherPollInfo($scope);
@@ -14,14 +14,14 @@ controllers.controller('CreateController', function ($scope, $rootScope, $locati
         pollService.createPoll(data,function() {
             $scope.pollCreationSuccess = true;
             $scope.pollCreationError = false;
-            $scope.pollCreationMessage = messages["pollCreationMessageSuccess"];
+            $scope.pollCreationMessage = messages.pollCreationMessageSuccess;
         },
         function() {
             $scope.pollCreationError = true;
             $scope.pollCreationSuccess = false;
-            $scope.pollCreationMessage = messages["pollCreationMessageError"];
+            $scope.pollCreationMessage = messages.pollCreationMessageError;
         });
-    }
+    };
 
   	$scope.submit = function () {
     	modalService.confirmPollCreateModal($scope.pollName, $scope.pollDesc, onConfirm);

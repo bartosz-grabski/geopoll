@@ -1,8 +1,8 @@
 // The UserPoll model
 
-var mongoose = require('mongoose')
-    , Schema = mongoose.Schema
-    , ObjectId = Schema.ObjectId;
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId;
 
 var userPollSchema = new Schema({
     poll_id: ObjectId,

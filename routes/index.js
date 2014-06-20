@@ -20,7 +20,7 @@ var create = function (req, res) {
     emailService.send('new_poll', locals, function (err, responseStatus, html, text) {
     });
     res.send(201);
-}
+};
 
 var polls = function (req, res) {
     Poll.find({}, function (err, polls) {
@@ -44,7 +44,7 @@ var pollGET = function (req, res) {
 
         Poll.findById(pollID, function (err, poll) {
             if (err) {
-                console.log(err)
+                console.log(err);
                 res.status(404).send('No poll with provided id');
             }
             else {
@@ -61,7 +61,7 @@ var pollGET = function (req, res) {
             }
         });
     }
-}
+};
 
 var pollPUT = function (req, res) {
     if (!Poll.isIDWithTokenFormatCorrect(req.param('id'))) {
@@ -75,7 +75,7 @@ var pollPUT = function (req, res) {
             }
         });
     }
-}
+};
 
 var userPollGET = function (req, res) {
 	if (!Poll.isIDWithOrWithoutTokenFormatCorrect(req.param('poll_id'))) {
@@ -85,7 +85,7 @@ var userPollGET = function (req, res) {
 		console.log(pollId);
 		UserPoll.find( { poll_id : pollId }, function (err, userPolls) {
 			if (err) {
-                console.log(err)
+                console.log(err);
                 res.status(404).send('No poll with provided id');
 			} else {
 				var userPollObjects = userPolls;
@@ -93,27 +93,27 @@ var userPollGET = function (req, res) {
 			}
 		});
 	}
-}
+};
 
 var userPollPOST = function(req, res) {
 	var	userPoll = UserPoll(req.body);
 	userPoll.save();
 	res.send(201);
-}
+};
 
 var view = function (req, res) {
     var view = req.params.view;
     res.render(view);
-}
+};
 
 var modal = function (req,res) {
-	var modal = req.params.modal
-	res.render("modals/"+modal)
-}
+	var modal = req.params.modal;
+	res.render("modals/"+modal);
+};
 
 var index = function (req, res) {
     res.render('index');
-}
+};
 
 module.exports = {
     create: create,
@@ -125,4 +125,4 @@ module.exports = {
     pollGET: pollGET,
     userPollPOST: userPollPOST,
     userPollGET: userPollGET
-}
+};

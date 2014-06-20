@@ -11,19 +11,19 @@ services.factory('pollService', function ($http,$location,$window) {
     	$http.post('/create',data)
     	.success(onSuccess)
     	.error(onFailure);
-    }
+    };
 
     service.getPollInfo = function(pollId,onSuccess,onFailure) {
     	$http.get('/poll/'+pollId)
     	.success(onSuccess)
     	.error(onFailure);
-    }
+    };
 
     service.updatePoll = function(pollId,data,onSuccess,onFailure) {
     	$http.put(/poll/+pollId,data)
     	.success(onSuccess)
     	.error(onFailure);
-    }
+    };
 
     service.gatherPollInfo = function($scope) {
 
@@ -37,7 +37,7 @@ services.factory('pollService', function ($http,$location,$window) {
     		data.timezone = $scope.timezone;
 
     		data.required_groups = [];
-    		for (group in $scope.groups) {
+    		for (var group in $scope.groups) {
     			data.required_groups.push(group);
     		}     
 
@@ -62,7 +62,7 @@ services.factory('pollService', function ($http,$location,$window) {
     		data.declaration_end_time = declEndDate;
 
     		return data;
-    	}
+    	};
     };
 
     service.networkToGui = function(data) {
@@ -83,12 +83,12 @@ services.factory('pollService', function ($http,$location,$window) {
 		converted.declEndDate = new Date(data.declaration_end_time);
 
     	return converted;
-    }
+    };
 
     service.timezones = [ 
         {string : '+05:00'},
         {string : '+06:00'}
-    ]
+    ];
 
 
     // user poll related functions
@@ -96,15 +96,15 @@ services.factory('pollService', function ($http,$location,$window) {
     service.newUserPoll = function(poll, onSuccess, onFailure) {
     	$http.post("/userpoll",poll)
     	.success(onSuccess)
-    	.error(onFailure)
-    }
+    	.error(onFailure);
+    };
 
 
     service.getUserPolls = function(pollId, onSuccess, onFailure) {
     	$http.get("/userpolls/"+pollId)
     	.success(onSuccess)
-    	.error(onFailure)
-    }
+    	.error(onFailure);
+    };
     
     return service;
 });
