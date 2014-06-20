@@ -94,8 +94,9 @@ services.factory('pollService', function ($http,$location,$window) {
     // user poll related functions
 
     service.newUserPoll = function(poll, onSuccess, onFailure) {
-    	//TODO
-    	//$http.post("/")
+    	$http.post("/userpoll",poll)
+    	.success(onSuccess)
+    	.error(onFailure)
     }
 
 

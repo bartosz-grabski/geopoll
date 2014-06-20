@@ -73,8 +73,29 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     	console.log("[INFO] Save user poll was clicked!");
     	$scope.addPhase = false;
     	var events = timelineService.getEventsAndDisableTimeline();
-    	pollService.newUserPoll();
+    	var userPoll = createUserPollFromEvents(events);
+
+    	var onSuccess = function() {
+    		console.log("[INFO] UserPoll was created!");
+    	}
+
+    	var onCancel = function() {
+    		console.log("[INFO] UserPoll failed to create");
+    	}
+
+    	pollService.newUserPoll(userPoll, onSuccess, onCancel);
     	delete $scope.username
+
+    }
+
+    function createUserPollFromEvents(events) {
+
+    	var userPoll = {};
+    	userPoll.user_name = $scope.username;
+    	userPoll.poll_id = $routeParams.id;
+    	userPoll.chosen_groups = $scope.groups;
+    	userPoll.time_slots = events;
+    	return userPoll;
 
     }
 

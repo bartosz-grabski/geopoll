@@ -1,12 +1,15 @@
 services.factory('timelineService', function ($http,$location,$window, modalService) {
 
 	var service = {}
-	var events = [];
 	var doubleClick = false;
 	var username = "asd";
 	var groups = [];
 	var tl;
 	var eventSource1;
+	var serviceData = {
+		username : "",
+		events : []
+	}
 
 	var colors = {
 		"yes" 	: "green",
@@ -26,21 +29,22 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
 	//hack to override closure, when function is declared the containing scope is captured
 	//thus it does not resolve username properly (only reffering to the value it first encountered)
-	var onEventConfirmed = (function() { return function(result) {
+	var onEventConfirmed = function(result) {
 
-		console.log(username)
-		
+		console.log(serviceData.username)
 		console.log("[INFO] Event creation confirmed");
 		var duration = result.duration;
 		var start = result.selectedTimestamp;
 		var end = new Date(start.getTime());
 		end.setHours(end.getHours()+duration);
 
-		var newEvent = eventFromData(start,end,username,"sample","blue");
+		var newEvent = eventFromData(start,end,serviceData.username,"sample","blue");
+		serviceData.events.push({timeStart:start, timeEnd:end, type:"blue"});
+
 		eventSource1.loadJSON({ "events":[newEvent] , "dateTimeFormat":"iso8601"}, '.')
 
 
-	}})();
+	}
 
 	var onEventCanceled = function() {
 		console.log("[INFO] Event creation was cancelled");
@@ -57,20 +61,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	};
 
 	SimileAjax.History.enabled = false;
-
-/*	var timeline_data = {
-		'events' : [
-		{
-			'start': "Jun 9 2014 20:30:00 GMT",
-			'end': "Jun 9 2014 21:30:00 GMT",
-			'title': 'Mark Evans',
-			'description': 'It is suitable for me',
-			'color': 'blue'
-		}
-		]
-	};
-*/
-
 
 	function onLoad() {
 
@@ -120,7 +110,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	}
 
 	function userPollsToEvents(userPolls) {
-		events = [];
+		var events = [];
 		for (var i = 0; i < userPolls.length; i++) {
 			var userPoll = userPolls[i];
 			console.log(userPoll);
@@ -163,8 +153,8 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	service.enableTimeline = function(username) {
 		console.log(username);
 		doubleClick = true;
-		username = username;
-		events = [];
+		serviceData.username = username;
+		serviceData.events = [];
 	}
 
 	service.disableTimeline = function() {
@@ -172,11 +162,11 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	}
 
 	service.getEvents = function() {
-		return events;
+		return serviceData.events;
 	}
 
 	service.getEventsAndDisableTimeline = function() {
-		service.disableDoubleClick();
+		service.disableTimeline();
 		return service.getEvents();
 	}
 

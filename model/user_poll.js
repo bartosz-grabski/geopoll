@@ -14,6 +14,7 @@ var userPollSchema = new Schema({
     	type : Array,
         "default" : []
     }
+    // {timeStart,timeEnd,type}
 });
 
 

@@ -1,0 +1,23 @@
+<div class="modal-header">
+	<h3 class="modal-title">Choose duration</h3>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal" role="form" name="pollForm">
+		<div class="form-group">
+			<label class="col-sm-3 control-label">From :</label>
+			<div id="selected" class="col-sm-9" class="form-control">
+				{{modal.selectedTimestamp}}
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="duration" class="col-sm-3 control-label">Duration</label>
+			<div class="col-sm-3">
+				<input class="form-control" minlength="3" maxlength="12" type="number" ng-model="modal.duration" name="duration" placeholder="duration in hours"/>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="modal.ok()">OK</button>
+	<button class="btn btn-warning" ng-click="modal.cancel()">Cancel</button>
+</div>

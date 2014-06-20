@@ -38,4 +38,4 @@ app.get('/polls', routes.polls);
 app.get('/views/:view', routes.view);
 app.get('/views/modals/:modal', routes.modal);
 app.get('/userpolls/:poll_id', routes.userPollGET);
-app.post('/userpoll/:id', routes.userPollPOST);
+app.post('/userpoll', routes.userPollPOST);
