@@ -96,8 +96,7 @@ var userPollGET = function (req, res) {
 }
 
 var userPollPOST = function(req, res) {
-	console.log('asd');
-	var	userPoll = UserPoll();
+	var	userPoll = UserPoll(req.body);
 	userPoll.save();
 	res.send(201);
 }

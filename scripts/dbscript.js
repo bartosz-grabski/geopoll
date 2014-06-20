@@ -14,11 +14,13 @@ var userPolls = [
 		time_slots : [
 		{ 
 			timeStart: today.setDate(15),
-			timeEnd: today.setDate(16) 
+			timeEnd: today.setDate(16),
+			type: "yes" 
 		},
 		{ 
 			timeStart: today.setDate(13),
-			timeEnd: today.setDate(14)
+			timeEnd: today.setDate(14),
+			type: "maybe" 
 		}
 		]
 	},
@@ -30,10 +32,12 @@ var userPolls = [
 		{ 
 			timeStart: today.setDate(14),
 			timeEnd: today.setDate(16),
+			type: "no" 
 		},
 		{ 
 			timeStart: today.setDate(18),
-			timeEnd: today.setDate(19)
+			timeEnd: today.setDate(19),
+			type: "maybe"
 		}
 		]
 	}

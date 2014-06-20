@@ -1,17 +1,64 @@
-services.factory('timelineService', function ($http,$location,$window) {
+services.factory('timelineService', function ($http,$location,$window, modalService) {
 
-	service = {}
+	var service = {}
+	var events = [];
+	var doubleClick = false;
+	var username = "asd";
+	var groups = [];
+	var tl;
+	var eventSource1;
+
+	var colors = {
+		"yes" 	: "green",
+		"no"  	: "red",
+		"maybe" : "orange"
+	};
+
+	var eventFromData = function(startTime, endTime, title, description, color) {
+		return {
+			'start': startTime.toISOString(),
+			'end' : endTime.toISOString(),
+			'title' : title,
+			'description' : description,
+			'color' : color
+		}
+	}
+
+	//hack to override closure, when function is declared the containing scope is captured
+	//thus it does not resolve username properly (only reffering to the value it first encountered)
+	var onEventConfirmed = (function() { return function(result) {
+
+		console.log(username)
+		
+		console.log("[INFO] Event creation confirmed");
+		var duration = result.duration;
+		var start = result.selectedTimestamp;
+		var end = new Date(start.getTime());
+		end.setHours(end.getHours()+duration);
+
+		var newEvent = eventFromData(start,end,username,"sample","blue");
+		eventSource1.loadJSON({ "events":[newEvent] , "dateTimeFormat":"iso8601"}, '.')
+
+
+	}})();
+
+	var onEventCanceled = function() {
+		console.log("[INFO] Event creation was cancelled");
+	}
+
 
 	Timeline._Band.prototype._onDblClick = function(innerFrame, evt, target) {
-		var debugg = this.pixelOffsetToDate(evt.offsetX);
-		eventSource1.loadJSON(timeline_data, '.');
-		eventSource1._fire("onAddMany", []);
-		tl.layout();
+		
+		if (doubleClick) {
+			var selectedTimestamp = this.pixelOffsetToDate(evt.offsetX);
+			modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp)
+		}
+
 	};
 
 	SimileAjax.History.enabled = false;
 
-	var timeline_data = {
+/*	var timeline_data = {
 		'events' : [
 		{
 			'start': "Jun 9 2014 20:30:00 GMT",
@@ -20,29 +67,10 @@ services.factory('timelineService', function ($http,$location,$window) {
 			'description': 'It is suitable for me',
 			'color': 'blue'
 		}
-		,
-
-		{
-			'start': "Jun 9 2014 21:00:00 GMT",
-			'end': "Jun 9 2014 22:00:00 GMT",
-			'title': 'Julia Roberts',
-			'description': "I'll be there too",
-			'color': 'black'
-		},
-
-		{
-			'start': "Jun 9 2014 23:00:00 GMT",
-			'end': "Jun 9 2014 23:30:00 GMT",
-			'title': 'Mark Evans',
-			'description': "I can be there",
-			'color': 'blue'
-		}
 		]
 	};
+*/
 
-
-	var tl;
-	var eventSource1;
 
 	function onLoad() {
 
@@ -95,6 +123,7 @@ services.factory('timelineService', function ($http,$location,$window) {
 		events = [];
 		for (var i = 0; i < userPolls.length; i++) {
 			var userPoll = userPolls[i];
+			console.log(userPoll);
 			for (var j = 0; j < userPoll.time_slots.length; j++) {
 
 				var timeStart = new Date(userPoll.time_slots[j].timeStart).toISOString();
@@ -106,7 +135,7 @@ services.factory('timelineService', function ($http,$location,$window) {
 					//start: "Jun 9 2014 20:30:00 GMT",
 					//end: "Jun 9 2014 21:30:00 GMT",
 					title : userPoll.user_name,
-					color : 'green'
+					color : colors[userPoll.time_slots[j].type]
 				}
 				events.push(userPollEvent);
 			}	
@@ -129,6 +158,26 @@ services.factory('timelineService', function ($http,$location,$window) {
 
 	service.reload = function() {
 
+	}
+
+	service.enableTimeline = function(username) {
+		console.log(username);
+		doubleClick = true;
+		username = username;
+		events = [];
+	}
+
+	service.disableTimeline = function() {
+		doubleClick = false;
+	}
+
+	service.getEvents = function() {
+		return events;
+	}
+
+	service.getEventsAndDisableTimeline = function() {
+		service.disableDoubleClick();
+		return service.getEvents();
 	}
 
 

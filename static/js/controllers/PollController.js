@@ -56,10 +56,13 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     // new entry, save entry functions
 
     $scope.newUserPoll = function() {
-    	modalService.newUserPollModal(function(username) {
-    		$scope.username = username;
+    	modalService.newUserPollModal(function(result) {
+    		var username = result.username;
+    		var groups = result.groups;
+    		$scope.username = result.username;
     		$scope.addPhase = true;
-    		console.log("[INFO] The newUserPoll modal was confirmed")
+    		console.log("[INFO] The newUserPoll modal was confirmed");
+    		timelineService.enableTimeline(username);
     	}, function() {
     		console.log("[INFO] The newUserPoll modal was dismissed")
     	});
@@ -69,7 +72,9 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     	console.log("[INFO] Save user poll was clicked!");
     	$scope.addPhase = false;
-    	delete $scope.username;
+    	var events = timelineService.getEventsAndDisableTimeline();
+    	pollService.newUserPoll();
+    	delete $scope.username
 
     }
 

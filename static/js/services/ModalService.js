@@ -125,7 +125,12 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		}
 
 		$scope.modal.ok = function() {
-			$modalInstance.close($scope.modal.username);
+			var username = $scope.modal.username;
+			var groups = [];
+			for (var g in $scope.modal.groups) {
+				groups.push(g);
+			}
+			$modalInstance.close({username:username, groups:groups});
 		}
 
 		$scope.modal.cancel = function() {
@@ -147,6 +152,43 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		});
 
 		modalInstance.result.then(onConfirm, onCancel)
+	}
+
+
+	var userEventCtrl = function($scope, $modalInstance, selectedTimestamp) {
+
+		$scope.modal = {};
+		$scope.modal.duration = 1;
+		$scope.modal.selectedTimestamp = selectedTimestamp;
+
+		$scope.modal.ok = function() {
+			var duration = $scope.modal.duration;
+			var result = {
+				duration : $scope.modal.duration,
+				selectedTimestamp : selectedTimestamp
+			}
+			$modalInstance.close($scope.modal);
+		}
+
+		$scope.modal.cancel = function() {
+			$modalInstance.dismiss('cancel');
+		}
+
+	}
+
+
+	service.newUserEventModal = function(onConfirm, onCancel, selectedTimestamp) {	
+
+		var modalInstance = $modal.open({
+			templateUrl: 'views/modals/event',
+			controller: userEventCtrl,
+			resolve : {
+				selectedTimestamp : function() { return selectedTimestamp; }
+			}
+		});
+
+		modalInstance.result.then(onConfirm,onCancel);
+
 	}
 
 	return service;
