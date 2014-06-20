@@ -35,12 +35,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
         var onSuccess = function (data) {
 
-            groups = {};
-            for (var i in data.required_groups) {
-                groups[data.required_groups[i]] = true;
-            }
             $scope.poll = data;
-            $scope.poll.required_groups = groups;
             $scope.canEdit = data.can_edit;
         };
 
@@ -66,7 +61,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     		timelineService.enableTimeline(username);
     	}, function() {
     		console.log("[INFO] The newUserPoll modal was dismissed");
-    	});
+    	}, $scope.poll.required_groups);
     };
 
     $scope.saveUserPoll = function() {

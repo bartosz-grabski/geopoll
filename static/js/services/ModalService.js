@@ -109,29 +109,16 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		});
 	};
 
-	var userPollCtrl = function($scope, $modalInstance, onConfirm, onCancel) {
+	var userPollCtrl = function($scope, $modalInstance, onConfirm, onCancel, groups) {
 
 		$scope.modal = {};
-		$scope.modal.groups = {};
-
-		$scope.modal.deleteGroup = function(group) {
-			delete $scope.modal.groups[group];
-		};
-
-		$scope.modal.addGroup = function() {
-			if ($scope.modal.newGroup && $scope.modal.newGroup !== "") {
-				$scope.modal.groups[$scope.modal.newGroup] = true;
-			}
-		};
+		$scope.modal.groups = groups
 
 		$scope.modal.ok = function() {
 			var username = $scope.modal.username;
-			var groups = [];
-			for (var g in $scope.modal.groups) {
-				groups.push(g);
-			}
+			var groups = $scope.modal.selectedGroups
 			$modalInstance.close({username:username, groups:groups});
-		};
+		}
 
 		$scope.modal.cancel = function() {
 			$modalInstance.dismiss('cancel');
@@ -140,7 +127,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 	};
 
 
-	service.newUserPollModal = function(onConfirm, onCancel) {
+	service.newUserPollModal = function(onConfirm, onCancel, groups) {
 
 		var modalInstance = $modal.open({
 			templateUrl: 'views/modals/userpoll',
@@ -148,6 +135,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			resolve: {
 				onConfirm: function() { return onConfirm; },
 				onCancel: function() { return onCancel; },
+				groups: function() { return groups;}
 			}
 		});
 

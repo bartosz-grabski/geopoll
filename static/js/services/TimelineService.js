@@ -8,7 +8,8 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	var eventSource1;
 	var serviceData = {
 		username : "",
-		events : []
+		events : [],
+		groups : []
 	};
 
 	var colors = {
@@ -57,7 +58,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		
 		if (doubleClick) {
 			var selectedTimestamp = this.pixelOffsetToDate(evt.offsetX);
-			modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp);
+			modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp, serviceData.groups);
 		}
 
 	};
@@ -153,10 +154,11 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
 	};
 
-	service.enableTimeline = function(username) {
+	service.enableTimeline = function(username, groups) {
 		console.log(username);
 		doubleClick = true;
 		serviceData.username = username;
+		serviceData.groups = groups;
 		serviceData.events = [];
 	};
 
