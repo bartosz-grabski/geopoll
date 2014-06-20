@@ -165,9 +165,10 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			var duration = $scope.modal.duration;
 			var result = {
 				duration : $scope.modal.duration,
-				selectedTimestamp : selectedTimestamp
+				selectedTimestamp : selectedTimestamp,
+				availability : $scope.modal.availability
 			};
-			$modalInstance.close($scope.modal);
+			$modalInstance.close(result);
 		};
 
 		$scope.modal.cancel = function() {

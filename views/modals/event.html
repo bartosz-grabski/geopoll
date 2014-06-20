@@ -10,9 +10,17 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="duration" class="col-sm-3 control-label">Duration</label>
-			<div class="col-sm-3">
+			<label for="duration" class="col-sm-3 control-label">Duration :</label>
+			<div class="col-sm-4">
 				<input class="form-control" minlength="3" maxlength="12" type="number" ng-model="modal.duration" name="duration" placeholder="duration in hours"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Availability :</label>
+			<div class="btn-group col-sm-4">
+				<label class="btn btn-success" ng-model="modal.availability" btn-radio="'yes'" uncheckable>Yes</label>
+				<label class="btn btn-warning" ng-model="modal.availability" btn-radio="'maybe'" uncheckable>Maybe</label>
+				<label class="btn btn-danger" ng-model="modal.availability" btn-radio="'no'" uncheckable>No</label>
 			</div>
 		</div>
 	</form>

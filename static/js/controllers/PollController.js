@@ -60,6 +60,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     		var username = result.username;
     		var groups = result.groups;
     		$scope.username = result.username;
+    		$scope.groups = result.groups;
     		$scope.addPhase = true;
     		console.log("[INFO] The newUserPoll modal was confirmed");
     		timelineService.enableTimeline(username);
@@ -85,6 +86,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     	pollService.newUserPoll(userPoll, onSuccess, onCancel);
     	delete $scope.username;
+    	delete $scope.groups;
 
     };
 

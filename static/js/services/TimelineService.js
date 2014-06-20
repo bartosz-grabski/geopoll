@@ -36,10 +36,12 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		var duration = result.duration;
 		var start = result.selectedTimestamp;
 		var end = new Date(start.getTime());
+		var availability = result.availability;
+		var description = "" //TODO
 		end.setHours(end.getHours()+duration);
 
-		var newEvent = eventFromData(start,end,serviceData.username,"sample","blue");
-		serviceData.events.push({timeStart:start, timeEnd:end, type:"blue"});
+		var newEvent = eventFromData(start,end,serviceData.username,description,colors[availability]);
+		serviceData.events.push({timeStart:start, timeEnd:end, type:availability});
 
 		eventSource1.loadJSON({ "events":[newEvent] , "dateTimeFormat":"iso8601"}, '.');
 
@@ -125,7 +127,8 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 					//start: "Jun 9 2014 20:30:00 GMT",
 					//end: "Jun 9 2014 21:30:00 GMT",
 					title : userPoll.user_name,
-					color : colors[userPoll.time_slots[j].type]
+					color : colors[userPoll.time_slots[j].type],
+					description : ""
 				};
 				events.push(userPollEvent);
 			}	
