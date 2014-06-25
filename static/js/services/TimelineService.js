@@ -38,7 +38,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		var start = result.selectedTimestamp;
 		var end = new Date(start.getTime());
 		var availability = result.availability;
-		var description = "" //TODO
+		var description = ""; //TODO
 		end.setHours(end.getHours()+duration);
 
 		var newEvent = eventFromData(start,end,serviceData.username,description,colors[availability]);

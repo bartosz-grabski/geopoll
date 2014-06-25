@@ -71,7 +71,10 @@ var pollPUT = function (req, res) {
         Poll.findByIdAndUpdate(Poll.extractID(req.param('id')), req.body, null, function (err, poll) {
             if (err) {
                 console.log(err);
-                res.status(403);
+                res.send(403);
+            } else {
+            	console.log("asd");
+            	res.send(200);
             }
         });
     }

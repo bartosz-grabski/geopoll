@@ -5,7 +5,6 @@ controllers.controller('CreateController', function ($scope, $rootScope, $locati
         "pollCreationMessageError" : "Error creating new poll!"
     };
 
-    $scope.timezones = pollService.timezones;
     var gatherPollInfo = pollService.gatherPollInfo($scope);
 
     var onConfirm = function() {

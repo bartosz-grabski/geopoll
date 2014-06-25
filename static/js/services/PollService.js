@@ -85,12 +85,6 @@ services.factory('pollService', function ($http,$location,$window) {
     	return converted;
     };
 
-    service.timezones = [ 
-        {string : '+05:00'},
-        {string : '+06:00'}
-    ];
-
-
     // user poll related functions
 
     service.newUserPoll = function(poll, onSuccess, onFailure) {

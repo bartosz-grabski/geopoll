@@ -43,7 +43,6 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 		$scope.modal = data;
 
-		$scope.modal.timezones = pollService.timezones;
 		$scope.modal.today = datepickerService.today($scope.modal);
 
 		$scope.modal.today();
@@ -66,7 +65,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		var temp = {};
 
 		for (var group in $scope.modal.groups) {
-			temp[group] = true;
+			temp[$scope.modal.groups[group]] = true;
 		}
 
 		$scope.modal.groups = temp;
@@ -112,13 +111,13 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 	var userPollCtrl = function($scope, $modalInstance, onConfirm, onCancel, groups) {
 
 		$scope.modal = {};
-		$scope.modal.groups = groups
+		$scope.modal.groups = groups;
 
 		$scope.modal.ok = function() {
 			var username = $scope.modal.username;
-			var groups = $scope.modal.selectedGroups
+			var groups = $scope.modal.selectedGroups;
 			$modalInstance.close({username:username, groups:groups});
-		}
+		};
 
 		$scope.modal.cancel = function() {
 			$modalInstance.dismiss('cancel');

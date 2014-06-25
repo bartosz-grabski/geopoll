@@ -3,8 +3,8 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
 	$scope.addPhase = false;
     $scope.messages = {
-        "pollUpdateError": "There were problems updating your poll!",
-        "pollUpdateSuccess": "Poll successfully updated!"
+        "updateError": "There were problems updating your poll!",
+        "updateSuccess": "Poll successfully updated!"
     };
 
     $scope.poll = {};
