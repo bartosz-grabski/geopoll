@@ -38,7 +38,7 @@ services.factory('pollService', function ($http,$location,$window) {
 
     		data.required_groups = [];
     		for (var group in $scope.groups) {
-    			data.required_groups.push(group);
+    			data.required_groups.push([group,$scope.groups[group]]);
     		}     
 
     		var startDate = $scope.startDate;

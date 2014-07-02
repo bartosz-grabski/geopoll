@@ -46,6 +46,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		$scope.modal.today = datepickerService.today($scope.modal);
 
 		$scope.modal.today();
+		$scope.modal.groupCount = 1;
 
 		$scope.modal.startTime = $scope.modal.dt;
 		$scope.modal.endTime = $scope.modal.dt;
@@ -63,9 +64,10 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		$scope.modal.format = datepickerService.format;
 
 		var temp = {};
-
+		console.log($scope.modal.groups);
 		for (var group in $scope.modal.groups) {
-			temp[$scope.modal.groups[group]] = true;
+			console.log(group);
+			temp[$scope.modal.groups[group][0]] = $scope.modal.groups[group][1];
 		}
 
 		$scope.modal.groups = temp;
@@ -73,7 +75,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		var gatherPollInfo = pollService.gatherPollInfo($scope.modal);
 
 		$scope.modal.addNewGroup = function() {
-        	$scope.modal.groups[$scope.modal.newGroup] = true;
+        	$scope.modal.groups[$scope.modal.newGroup] = $scope.modal.groupCount;
     	};
 
     	$scope.modal.showGroupLabel = function (group) {

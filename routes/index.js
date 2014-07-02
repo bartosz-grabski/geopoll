@@ -97,6 +97,8 @@ var userPollGET = function (req, res) {
 };
 
 var userPollPOST = function(req, res) {
+	var pollId = Poll.extractID(req.param('poll_id'));
+	req.body.poll_id = pollId;
 	var	userPoll = UserPoll(req.body);
 	userPoll.save();
 	res.send(201);

@@ -48,9 +48,10 @@ controllers.controller('CreateController', function ($scope, $rootScope, $locati
     $scope.format = datepickerService.format;
 
     $scope.groups = {};
+    $scope.groupCount = 1;
 
     $scope.addNewGroup = function() {
-        $scope.groups[$scope.newGroup] = true;
+        $scope.groups[$scope.newGroup] = $scope.groupCount;
     };
 
     $scope.showGroupLabel = function (group) {
