@@ -19,11 +19,11 @@
 			</div>
 		</div>
 
-		<alert ng-show="pollUpdateSuccess" type="success">
-			<span>{{messages.updateSuccess}}</span>
+		<alert ng-show="pollSuccess" type="success">
+			<span>{{currentMessage}}</span>
 		</alert>
-		<alert ng-show="pollUpdateError" type="danger">
-			<span>{{messages.updateError}}</span>
+		<alert ng-show="pollError" type="danger">
+			<span>{{currentMessage}}</span>
 		</alert>
 
 		<div id="tl" style="height: 350px; border: 1px solid #aaa; margin-bottom: 15px"></div>

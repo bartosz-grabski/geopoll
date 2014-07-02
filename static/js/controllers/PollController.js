@@ -1,12 +1,14 @@
 controllers.controller('PollController', function ($scope, $rootScope, $location, $window, pollService, modalService, $routeParams, timelineService) {
 
 
-	$scope.addPhase = false;
-    $scope.messages = {
+	
+    var messages = {
         "updateError": "There were problems updating your poll!",
-        "updateSuccess": "Poll successfully updated!"
+        "updateSuccess": "Poll successfully updated!",
+        "pollNotFound" : "No poll with provided id!"
     };
 
+    $scope.addPhase = false;
     $scope.poll = {};
     $scope.userPolls = [];
 
@@ -19,12 +21,14 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
             console.log($routeParams.id);
             pollService.updatePoll($routeParams.id, data, function () {
                     $scope.poll = data;
-                    $scope.pollUpdateSuccess = true;
-                    $scope.pollUpdateError = false;
+                    $scope.pollSuccess = true;
+                    $scope.pollError = false;
+                    $scope.currentMessage = messages.updateSuccess;
                 },
                 function () {
-                    $scope.pollUpdateError = true;
-                    $scope.pollUpdateSuccess = false;
+                    $scope.pollError = true;
+                    $scope.pollSuccess = false;
+                    $scope.currentMessage = messages.updateError;
                 });
         };
 
@@ -40,6 +44,10 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         };
 
         var onError = function () {
+
+        	$scope.pollError = true;
+        	$scope.pollSuccess = false;
+        	$scope.currentMessage = messages.pollNotFound;
 
         };
 

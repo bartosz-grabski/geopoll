@@ -43,21 +43,19 @@ var pollGET = function (req, res) {
         var pollToken = Poll.extractToken(req.param('id'));
 
         Poll.findById(pollID, function (err, poll) {
-            if (err) {
-                console.log(err);
-                res.status(404).send('No poll with provided id');
-            }
-            else {
+			if(poll) {
                 var pollObj = poll.toObject();
 
                 pollObj.can_edit = false;
                 if (pollToken == pollObj.creation_token) {
                     pollObj.can_edit = true;
                 }
-
                 delete pollObj.__v;
                 delete pollObj.creation_token;
                 res.send(pollObj);
+            } else {
+                console.log(err);
+                res.status(404).send('No poll with provided id');
             }
         });
     }
