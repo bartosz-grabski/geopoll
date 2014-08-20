@@ -57,7 +57,8 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	Timeline._Band.prototype._onDblClick = function(innerFrame, evt, target) {
 		
 		if (doubleClick) {
-			var selectedTimestamp = this.pixelOffsetToDate(evt.offsetX);
+			var coords = SimileAjax.DOM.getEventRelativeCoordinates(evt, innerFrame);
+			var selectedTimestamp = this.pixelOffsetToDate(coords.x);
 			modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp, serviceData.groups);
 		}
 

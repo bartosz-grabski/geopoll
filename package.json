@@ -9,7 +9,7 @@
     "express": "3.5.1",
     "mongoose": "~3.8.8",
     "ejs": "*",
-    "nodemailer": "*",
+    "nodemailer": "0.7.1",
     "email-templates" : "*",
     "rand-token" : "*"
   },
