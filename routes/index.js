@@ -118,6 +118,10 @@ var index = function (req, res) {
     res.render('index');
 };
 
+var registerGET = function (req, res) {
+    res.render('register');
+}
+
 module.exports = {
     create: create,
     polls: polls,
@@ -127,5 +131,6 @@ module.exports = {
     pollPUT: pollPUT,
     pollGET: pollGET,
     userPollPOST: userPollPOST,
-    userPollGET: userPollGET
+    userPollGET: userPollGET,
+    registerGET: registerGET
 };
