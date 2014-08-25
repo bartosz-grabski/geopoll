@@ -39,3 +39,5 @@ app.get('/views/:view', routes.view);
 app.get('/views/modals/:modal', routes.modal);
 app.get('/userpolls/:poll_id', routes.userPollGET);
 app.post('/userpoll', routes.userPollPOST);
+app.delete('/poll/:poll_id/term/:term_id', routes.deleteTerm);
+app.post('/poll/:poll_id/term', routes.addTerm);

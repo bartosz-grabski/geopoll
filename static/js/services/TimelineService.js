@@ -66,7 +66,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
 	SimileAjax.History.enabled = false;
 
-	function onLoad() {
+	function onLoad(id) {
 
 		eventSource1 = new Timeline.DefaultEventSource();
 
@@ -98,7 +98,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		bandInfos[2].syncWith = 0;
 		bandInfos[3].syncWith = 0;
 		bandInfos[1].highlight = true;
-		tl = Timeline.create(document.getElementById("tl"), bandInfos);
+		tl = Timeline.create(document.getElementById(id), bandInfos);
 
 	}
 
@@ -147,8 +147,8 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		tl.layout();
 	};
 
-	service.load = function() {
-		onLoad();
+	service.load = function(id) {
+		onLoad(id);
 	};
 
 	service.reload = function() {

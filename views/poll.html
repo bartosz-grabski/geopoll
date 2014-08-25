@@ -1,39 +1,46 @@
 <div class="container pagination-centered">
 
-	<div class="container">
-		<div class="row">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<span>Poll</span>
-					<button  ng-click="edit()" ng-show="canEdit" type="button" class="btn btn-primary pull-right">
-						<span class="glyphicon glyphicon-cog"></span>
-					</button>
-				</div>
-				<div class="panel-body">
-					<ul class="list-group">
-						<li class="list-group-item">Name : {{poll.name}}</li>
-						<li class="list-group-item">Description : {{poll.description}}</li>
-						<li class="list-group-item">Creator : {{poll.creator_mail}}</li>
-					</ul>
+	<div ng-show="poll">
+		<div class="container" ng-show="!poll.isDeclarationClosed">
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<span>Poll</span>
+						<button  ng-click="edit()" ng-show="canEdit" type="button" class="btn btn-primary pull-right">
+							<span class="glyphicon glyphicon-cog"></span>
+						</button>
+					</div>
+					<div class="panel-body">
+						<ul class="list-group">
+							<li class="list-group-item">Name : {{poll.name}}</li>
+							<li class="list-group-item">Description : {{poll.description}}</li>
+							<li class="list-group-item">Creator : {{poll.creator_mail}}</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
-
+		<div class="container">
+			<alert type="success" ng-show="poll.isDeclarationClosed">
+				<span>{{declarationClosedMessage}}</span>
+			</alert>
+			<div id="tl" style="height: 350px; border: 1px solid #aaa; margin-bottom: 15px"></div>
+		</div>
+		<div class="container" ng-show="!eventDisabled">
+			<ul class="nav nav-pills pull-right">
+				<li ng-class="{pointer: !addPhase, active: !addPhase}"><a ng-click="newEvent()">New</a></li>
+				<li ng-class="{pointer: addPhase, active: addPhase}"><a ng-click="saveEvent()">Save</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="container">
 		<alert ng-show="pollSuccess" type="success">
 			<span>{{currentMessage}}</span>
 		</alert>
 		<alert ng-show="pollError" type="danger">
 			<span>{{currentMessage}}</span>
 		</alert>
-
-		<div id="tl" style="height: 350px; border: 1px solid #aaa; margin-bottom: 15px"></div>
-		<div id="container">
-			<ul class="nav nav-pills pull-right">
-				<li ng-class="{pointer: !addPhase, active: !addPhase}"><a ng-click="newUserPoll()">New</a></li>
-				<li ng-class="{pointer: addPhase, active: addPhase}"><a ng-click="saveUserPoll()">Save</a></li>
-			</ul>
-		</div>
 	</div>
-
-	<script src="http://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></script>
 </div>
+
+<script src="http://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></script>

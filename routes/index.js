@@ -44,12 +44,32 @@ var pollGET = function (req, res) {
 
         Poll.findById(pollID, function (err, poll) {
 			if(poll) {
+                
+                
                 var pollObj = poll.toObject();
+                var isDeclarationClosed = pollObj.is_declaration_closed;
+                var today = new Date(); // should we care about timezones somehow ?
+
+                pollObj.isDeclarationClosed = isDeclarationClosed;
+
+                if (pollObj.declaration_end_time < today) {
+                    pollObj.is_declaration_closed = true;
+                    if (isDeclarationClosed === false) {
+                        Poll.findByIdAndUpdate(pollID,pollObj,null, function(err,succ) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("successfully updated declaration_closed field for poll = "+pollID);
+                            }
+                        });
+                    }
+                } 
 
                 pollObj.can_edit = false;
                 if (pollToken == pollObj.creation_token) {
                     pollObj.can_edit = true;
                 }
+
                 delete pollObj.__v;
                 delete pollObj.creation_token;
                 res.send(pollObj);
@@ -97,11 +117,24 @@ var userPollGET = function (req, res) {
 };
 
 var userPollPOST = function(req, res) {
-	var pollId = Poll.extractID(req.param('poll_id'));
+	
+    var pollId = Poll.extractID(req.param('poll_id'));
 	req.body.poll_id = pollId;
-	var	userPoll = UserPoll(req.body);
-	userPoll.save();
-	res.send(201);
+
+    Poll.findById(pollId, function(err, poll) {
+
+        if (err) {
+            res.send(500);
+        } else if (poll.is_declaration_closed) {
+            res.send(400);
+        }
+
+        var userPoll = UserPoll(req.body);
+        userPoll.save();
+        res.send(201);
+
+    });
+    
 };
 
 var view = function (req, res) {
@@ -118,6 +151,51 @@ var index = function (req, res) {
     res.render('index');
 };
 
+var addTerm = function (req, res) {
+
+    var pollId = Poll.extractId(req.param('poll_id'));
+
+    Poll.findById(pollId, function(err, poll) {
+        if (err) {
+            res.send(500);
+        } else if (!poll.is_declaration_closed) {
+            res.send(400);
+        } else {
+
+            if (!poll.selected_terms) {
+                
+                terms = { 
+                    nextTermId : 0,
+                    terms : [] //object { termId, startDate, endDate } 
+                }
+
+                poll.selected_terms = terms;
+
+            }
+
+            var term = req.body;
+
+            term.id = poll.selected_terms.nextTermId++;
+
+            poll.selected_terms.terms.push(term);
+
+            Poll.findByIdAndUpdate(pollId,poll,function(err,poll) {
+                if (err) {
+                    res.send(500);
+                } else {
+                    res.send(201, term);
+                }
+            })
+
+         }
+    });
+
+};
+
+var deleteTerm = function (req, res) {
+
+};
+
 module.exports = {
     create: create,
     polls: polls,
@@ -127,5 +205,7 @@ module.exports = {
     pollPUT: pollPUT,
     pollGET: pollGET,
     userPollPOST: userPollPOST,
-    userPollGET: userPollGET
+    userPollGET: userPollGET,
+    addTerm: addTerm,
+    deleteTerm: deleteTerm
 };

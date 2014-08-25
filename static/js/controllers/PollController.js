@@ -5,12 +5,17 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     var messages = {
         "updateError": "There were problems updating your poll!",
         "updateSuccess": "Poll successfully updated!",
-        "pollNotFound" : "No poll with provided id!"
+        "pollNotFound" : "No poll with provided id!",
+        "declarationClosed" : "Declaration phase is closed now. Vote on selected terms",
+        "declarationClosedEditable" : "Declaration phase is close. Please choose terms to vote on"
     };
 
+    $scope.messages = messages;
+
     $scope.addPhase = false;
-    $scope.poll = {};
     $scope.userPolls = [];
+    $scope.eventDisabled = false;
+    $scope.declarationClosedMessage = messages.declarationClosed;
 
     $scope.edit = function () {
 
@@ -35,12 +40,45 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         modalService.updatePollModal(pollService.networkToGui($scope.poll), onConfirm);
     };
 
+
+    function getUserPolls() {
+
+        var onSuccess = function(userPolls) {
+            timelineService.loadEvents(userPolls);
+        };
+
+        var onFailure = function() {
+
+        };
+
+        pollService.getUserPolls($routeParams.id,onSuccess,onFailure);
+
+    };
+
+    function getChosenTerms() {
+
+    };
+
+
+
+
     function getPollInfo() {
 
         var onSuccess = function (data) {
 
             $scope.poll = data;
             $scope.canEdit = data.can_edit;
+            $scope.chosenTerms = data.chosenTerms; //array of objects
+            if (data.can_edit && data.isDeclarationClosed) {
+                $scope.newEvent = newTerm;
+                $scope.saveEvent = saveTerm;
+                $scope.declarationClosedMessage = messages.declarationClosedEditable;
+
+                timelineService.loadTerms();
+
+            } else if (data.isDeclarationClosed) {
+                $scope.eventDisabled = true;
+            }
         };
 
         var onError = function () {
@@ -56,9 +94,17 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     }
 
+    function newTerm() {
+
+    }
+
+    function saveTerm () {
+
+    }
+
     // new entry, save entry functions
 
-    $scope.newUserPoll = function() {
+    function newUserPoll() {
     	modalService.newUserPollModal(function(result) {
     		var username = result.username;
     		var groups = result.groups;
@@ -72,7 +118,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     	}, $scope.poll.required_groups);
     };
 
-    $scope.saveUserPoll = function() {
+    function saveUserPoll() {
 
     	console.log("[INFO] Save user poll was clicked!");
     	$scope.addPhase = false;
@@ -83,8 +129,13 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     		console.log("[INFO] UserPoll was created!");
     	};
 
-    	var onCancel = function() {
+    	var onCancel = function(err,status) {
     		console.log("[INFO] UserPoll failed to create");
+            if (status === 400) {
+                $scope.currentMessage = messages.declarationClosed;
+                $scope.pollError = true;
+                $scope.pollSuccess = false;
+            }
     	};
 
     	pollService.newUserPoll(userPoll, onSuccess, onCancel);
@@ -102,26 +153,15 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     	userPoll.time_slots = events;
     	return userPoll;
 
-    }
+    };
 
+    $scope.newEvent = newUserPoll;  // when declaration is closed then it's swapped for newTerm, saveTerm
+    $scope.saveEvent = saveUserPoll;
 
-    function getUserPolls() {
+    timelineService.load("tl");
 
-    	var onSuccess = function(userPolls) {
-    		timelineService.loadEvents(userPolls);
-    	};
-
-    	var onFailure = function() {
-
-    	};
-
-    	pollService.getUserPolls($routeParams.id,onSuccess,onFailure);
-
-    }
-
-    timelineService.load();
     getPollInfo();
-	getUserPolls();    
+    
 
 
 });

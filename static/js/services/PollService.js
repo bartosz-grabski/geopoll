@@ -99,6 +99,18 @@ services.factory('pollService', function ($http,$location,$window) {
     	.success(onSuccess)
     	.error(onFailure);
     };
+
+    service.newTerm = function(pollId, term, onSuccess, onFailure) {
+        $http.post("/poll/"+pollId+"/term", term)
+        .success(onSuccess)
+        .error(onFailure);
+    };
+
+    service.deleteTerm = function(pollId, termId, onSuccess, onFailure) {
+        $http.delete("/poll/"+pollId+"/term/"+termId)
+        .success(onSuccess)
+        .error(onFailure);
+    };
     
     return service;
 });
