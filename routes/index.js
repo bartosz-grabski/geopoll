@@ -44,12 +44,30 @@ var pollGET = function (req, res) {
 
         Poll.findById(pollID, function (err, poll) {
 			if(poll) {
+                
+                
                 var pollObj = poll.toObject();
+                var isDeclarationClosed = pollObj.is_declaration_closed;
+                var today = new Date(); // should we care about timezones somehow ?
+
+                if (pollObj.declaration_end_time < today) {
+                    pollObj.is_declaration_closed = true;
+                    if (isDeclarationClosed === false) {
+                        Poll.findByIdAndUpdate(pollID,pollObj,null, function(err,succ) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("successfully updated declaration_closed field for poll = "+pollID);
+                            }
+                        });
+                    }
+                } 
 
                 pollObj.can_edit = false;
                 if (pollToken == pollObj.creation_token) {
                     pollObj.can_edit = true;
                 }
+
                 delete pollObj.__v;
                 delete pollObj.creation_token;
                 res.send(pollObj);
@@ -97,11 +115,23 @@ var userPollGET = function (req, res) {
 };
 
 var userPollPOST = function(req, res) {
-	var pollId = Poll.extractID(req.param('poll_id'));
+	
+    var pollId = Poll.extractID(req.param('poll_id'));
 	req.body.poll_id = pollId;
-	var	userPoll = UserPoll(req.body);
-	userPoll.save();
-	res.send(201);
+
+    Poll.findById(pollId, function(err, poll) {
+
+        if (err || poll.is_declaration_closed) {
+            res.send(400);
+            return;
+        }
+
+        var userPoll = UserPoll(req.body);
+        userPoll.save();
+        res.send(201);
+
+    });
+    
 };
 
 var view = function (req, res) {
