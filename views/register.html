@@ -1,12 +1,36 @@
 <div>
     <h4 class="text-muted">Register</h4>
 
-    <form class="form-horizontal" role="form" name="registrationForm">
+    <alert ng-show="registerSuccess" type="success">
+        <span>{{registerMessage}}</span>
+    </alert>
+    <alert ng-show="registerError" type="danger">
+        <span>{{registerMessage}}</span>
+    </alert>
+
+
+    <form class="form-horizontal" role="form" ng-model="registrationForm" name="registrationForm"
+          ng-controller="RegisterController" novalidate>
+        <!-- ERRORS -->
+        <alert ng-show="registrationForm.$dirty && registrationForm.$invalid || isInvalid">
+            <span ng-show="registrationForm.username.$error.required">Username is required</span>
+            <span ng-show="registrationForm.username.$error.minlength">Username is too short. Minimum lenght is 3</span>
+            <span ng-show="registrationForm.username.$error.maxlength">Username is too long. Maximum length is 20</span>
+            <span ng-show="registrationForm.username.$error.pattern">You can use only letters, numbers, hyphen - and underscore _ </span>
+            <span ng-show="isInvalid">{{ serverMessage }}</span>
+            <span ng-show="registrationForm.firstName.$error.required">First name is required</span>
+            <span ng-show="registrationForm.lastName.$error.required">Last name is required</span>
+            <span ng-show="registrationForm.password.$error.required">Password is required</span>
+            <span ng-show="registrationForm.email.$error.required">Email is required</span>
+        </alert>
+
         <div class="form-group">
             <label class="col-sm-2 control-label" for="username">Username</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' id='username' name='username' value='' class="form-control"/>
+                <input type='text' ng-model="registration.username" ng-pattern="/^[A-Za-z0-9_-]*$/" ng-minlength="3"
+                       ng-maxlength="20" ng-trim="false" ng-change="usernameChange()" id='username' name='username' value='' class="form-control"
+                       required/>
             </div>
         </div>
 
@@ -14,7 +38,8 @@
             <label class="col-sm-2 control-label" for="firstName">First Name</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' id='firstName' name='firstName' value='' class="form-control"/>
+                <input type='text' ng-model="registration.firstName" id='firstName' name='firstName' value=''
+                       class="form-control" required/>
             </div>
         </div>
 
@@ -22,7 +47,8 @@
             <label class="col-sm-2 control-label" for="lastName">Last Name</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' id='lastName' name='lastName' value='' class="form-control"/>
+                <input type='text' ng-model="registration.lastName" id='lastName' name='lastName' value=''
+                       class="form-control" required/>
             </div>
         </div>
 
@@ -30,28 +56,24 @@
             <label class="col-sm-2 control-label" for="password">Password</label>
 
             <div class="col-sm-4 controls">
-                <input type='password' name='password' id='password' class="form-control"/>
+                <input type='password' ng-model="registration.password" name='password' id='password'
+                       class="form-control" required/>
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="passwordconf">Confirm password</label>
-
-            <div class="col-sm-4 controls">
-                <input type='password' name='passwordconf' id='passwordconf' class="form-control"/>
-            </div>
-        </div>
 
         <div class="form-group">
             <label class="col-sm-2 control-label" for="email">Email</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' name='email' id='email' class="form-control"/>
+                <input type='text' ng-model="registration.email" name='email' id='email' class="form-control" required/>
             </div>
         </div>
         <div class="form-group">
-            <button type="submit" class="col-sm-offset-2 btn btn-primary">Register</button>
+            <button type="submit" ng-click="saveData()" class="col-sm-offset-2 btn btn-primary">Register</button>
             <button type="reset" class="btn">Cancel</button>
         </div>
+
+
     </form>
 </div>
