@@ -17,10 +17,16 @@ controllers.controller('RegisterController', function ($scope, registerService) 
 
         var onSuccess = function () {
             console.log("[INFO] New user has been registered!");
+            $scope.registerSuccess=true;
+            $scope.registerError=false;
+            $scope.registerMessage=messages.userRegistrationMessageSuccess;
         };
 
         var onCancel = function () {
             console.log("[INFO] User registration has failed");
+            $scope.registerSuccess=false;
+            $scope.registerError=true;
+            $scope.registerMessage=messages.userRegistrationMessageError;
         };
 
         registerService.registerNewUser($scope.registration, onSuccess, onCancel);

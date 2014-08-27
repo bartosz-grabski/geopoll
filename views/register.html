@@ -11,17 +11,10 @@
 
     <form class="form-horizontal" role="form" ng-model="registrationForm" name="registrationForm"
           ng-controller="RegisterController" novalidate>
-        <!-- ERRORS -->
-        <alert ng-show="registrationForm.$dirty && registrationForm.$invalid || isInvalid">
-            <span ng-show="registrationForm.username.$error.required">Username is required</span>
-            <span ng-show="registrationForm.username.$error.minlength">Username is too short. Minimum lenght is 3</span>
-            <span ng-show="registrationForm.username.$error.maxlength">Username is too long. Maximum length is 20</span>
-            <span ng-show="registrationForm.username.$error.pattern">You can use only letters, numbers, hyphen - and underscore _ </span>
+
+
+        <alert ng-show="isInvalid">
             <span ng-show="isInvalid">{{ serverMessage }}</span>
-            <span ng-show="registrationForm.firstName.$error.required">First name is required</span>
-            <span ng-show="registrationForm.lastName.$error.required">Last name is required</span>
-            <span ng-show="registrationForm.password.$error.required">Password is required</span>
-            <span ng-show="registrationForm.email.$error.required">Email is required</span>
         </alert>
 
         <div class="form-group">
@@ -32,6 +25,13 @@
                        ng-maxlength="20" ng-trim="false" ng-change="usernameChange()" id='user_name' name='user_name'
                        value='' class="form-control"
                        required/>
+                <span ng-show="registrationForm.user_name.$error.required"><i>Username is required</i></span>
+                <span ng-show="registrationForm.user_name.$error.minlength"><i>Username is too short. Minimum lenght is
+                    3</i></span>
+                <span ng-show="registrationForm.user_name.$error.maxlength"><i>Username is too long. Maximum length is
+                    20</i></span>
+                <span ng-show="registrationForm.user_name.$error.pattern"><i>You can use only letters, numbers, hyphen -
+                    and underscore _ </i></span>
             </div>
         </div>
 
@@ -39,8 +39,12 @@
             <label class="col-sm-2 control-label" for="first_name">First Name</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' ng-model="registration.first_name" id='first_name' name='first_name' value=''
+                <input type='text' ng-model="registration.first_name" ng-pattern="/^[A-Za-z]*$/" id='first_name'
+                       name='first_name' value=''
                        class="form-control" required/>
+                <span ng-show="registrationForm.first_name.$error.required"><i>First name is required</i></span>
+                <span ng-show="registrationForm.first_name.$error.pattern"><i>You are allowed to use only
+                    letters</i></span>
             </div>
         </div>
 
@@ -48,8 +52,13 @@
             <label class="col-sm-2 control-label" for="last_name">Last Name</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' ng-model="registration.last_name" id='last_name' name='last_name' value=''
+                <input type='text' ng-model="registration.last_name" ng-pattern="/^[A-Za-z]*$/" id='last_name'
+                       name='last_name' value=''
                        class="form-control" required/>
+                <span ng-show="registrationForm.last_name.$error.required"><i>Last name is required</i></span>
+                <span ng-show="registrationForm.last_name.$error.pattern"><i>You are allowed to use only
+                    letters</i></span>
+
             </div>
         </div>
 
@@ -57,9 +66,13 @@
             <label class="col-sm-2 control-label" for="hashed_password">Password</label>
 
             <div class="col-sm-4 controls">
-                <input type='password' ng-model="registration.hashed_password" name='hashed_password'
+                <input type='password' ng-model="registration.hashed_password" ng-minlength="3"
+                       ng-maxlength="20" name='hashed_password'
                        id='hashed_password'
                        class="form-control" required/>
+                <span ng-show="registrationForm.hashed_password.$error.required"><i>Password is required</i></span>
+                <span ng-show="registrationForm.hashed_password.$error.minlength"><i>Password is too short. Minimum 3 characters.</i></span>
+                <span ng-show="registrationForm.hashed_password.$error.maxlength"><i>Password is too long. Maximum 20 characters.</i></span>
             </div>
         </div>
 
@@ -68,11 +81,13 @@
             <label class="col-sm-2 control-label" for="email">Email</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' ng-model="registration.email" name='email' id='email' class="form-control" required/>
+                <input type='text' ng-model="registration.email" ng-pattern="/[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\.[a-zA-Z]{2,4}/" name='email' id='email' class="form-control" required/>
+                <span ng-show="registrationForm.email.$error.required"><i>Email is required</i></span>
+                <span ng-show="registrationForm.email.$error.pattern"><i>This is not an e-mail address.</i></span>
             </div>
         </div>
         <div class="form-group">
-            <button type="submit" ng-click="saveData()" class="col-sm-offset-2 btn btn-primary">Register</button>
+            <button type="submit" ng-click="saveData()" ng-disabled="registrationForm.$invalid || !registrationForm.$dirty" class="col-sm-offset-2 btn btn-primary">Register</button>
             <button type="reset" class="btn">Cancel</button>
         </div>
 
