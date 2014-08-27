@@ -25,38 +25,40 @@
         </alert>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="username">Username</label>
+            <label class="col-sm-2 control-label" for="user_name">Username</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' ng-model="registration.username" ng-pattern="/^[A-Za-z0-9_-]*$/" ng-minlength="3"
-                       ng-maxlength="20" ng-trim="false" ng-change="usernameChange()" id='username' name='username' value='' class="form-control"
+                <input type='text' ng-model="registration.user_name" ng-pattern="/^[A-Za-z0-9_-]*$/" ng-minlength="3"
+                       ng-maxlength="20" ng-trim="false" ng-change="usernameChange()" id='user_name' name='user_name'
+                       value='' class="form-control"
                        required/>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="firstName">First Name</label>
+            <label class="col-sm-2 control-label" for="first_name">First Name</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' ng-model="registration.firstName" id='firstName' name='firstName' value=''
+                <input type='text' ng-model="registration.first_name" id='first_name' name='first_name' value=''
                        class="form-control" required/>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="lastName">Last Name</label>
+            <label class="col-sm-2 control-label" for="last_name">Last Name</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' ng-model="registration.lastName" id='lastName' name='lastName' value=''
+                <input type='text' ng-model="registration.last_name" id='last_name' name='last_name' value=''
                        class="form-control" required/>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="password">Password</label>
+            <label class="col-sm-2 control-label" for="hashed_password">Password</label>
 
             <div class="col-sm-4 controls">
-                <input type='password' ng-model="registration.password" name='password' id='password'
+                <input type='password' ng-model="registration.hashed_password" name='hashed_password'
+                       id='hashed_password'
                        class="form-control" required/>
             </div>
         </div>
