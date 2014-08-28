@@ -1,0 +1,2 @@
+services.factory('loginService', function () {
+});

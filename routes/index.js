@@ -136,6 +136,10 @@ var registerPOST = function (req, res) {
     })
 };
 
+var loginGET = function(req, res){
+    res.render('login');
+}
+
 module.exports = {
     create: create,
     polls: polls,
@@ -147,5 +151,6 @@ module.exports = {
     userPollPOST: userPollPOST,
     userPollGET: userPollGET,
     registerGET: registerGET,
-    registerPOST: registerPOST
+    registerPOST: registerPOST,
+    loginGET: loginGET
 };
