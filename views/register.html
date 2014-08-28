@@ -10,12 +10,7 @@
 
 
     <form class="form-horizontal" role="form" ng-model="registrationForm" name="registrationForm"
-          ng-controller="RegisterController" novalidate>
-
-
-        <alert ng-show="isInvalid">
-            <span ng-show="isInvalid">{{ serverMessage }}</span>
-        </alert>
+          novalidate>
 
         <div class="form-group">
             <label class="col-sm-2 control-label" for="user_name">Username</label>
@@ -71,8 +66,10 @@
                        id='hashed_password'
                        class="form-control" required/>
                 <span ng-show="registrationForm.hashed_password.$error.required"><i>Password is required</i></span>
-                <span ng-show="registrationForm.hashed_password.$error.minlength"><i>Password is too short. Minimum 3 characters.</i></span>
-                <span ng-show="registrationForm.hashed_password.$error.maxlength"><i>Password is too long. Maximum 20 characters.</i></span>
+                <span ng-show="registrationForm.hashed_password.$error.minlength"><i>Password is too short. Minimum 3
+                    characters.</i></span>
+                <span ng-show="registrationForm.hashed_password.$error.maxlength"><i>Password is too long. Maximum 20
+                    characters.</i></span>
             </div>
         </div>
 
@@ -81,13 +78,18 @@
             <label class="col-sm-2 control-label" for="email">Email</label>
 
             <div class="col-sm-4 controls">
-                <input type='text' ng-model="registration.email" ng-pattern="/[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\.[a-zA-Z]{2,4}/" name='email' id='email' class="form-control" required/>
+                <input type='text' ng-model="registration.email"
+                       ng-pattern="/[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\.[a-zA-Z]{2,4}/" name='email' id='email'
+                       class="form-control" required/>
                 <span ng-show="registrationForm.email.$error.required"><i>Email is required</i></span>
                 <span ng-show="registrationForm.email.$error.pattern"><i>This is not an e-mail address.</i></span>
             </div>
         </div>
         <div class="form-group">
-            <button type="submit" ng-click="saveData()" ng-disabled="registrationForm.$invalid || !registrationForm.$dirty" class="col-sm-offset-2 btn btn-primary">Register</button>
+            <button type="submit" ng-click="saveData()"
+                    ng-disabled="registrationForm.$invalid || !registrationForm.$dirty"
+                    class="col-sm-offset-2 btn btn-primary">Register
+            </button>
             <button type="reset" class="btn">Cancel</button>
         </div>
 

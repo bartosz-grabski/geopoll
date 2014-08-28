@@ -123,9 +123,17 @@ var registerGET = function (req, res) {
 };
 
 var registerPOST = function (req, res) {
-    var user = User(req.body);
-    user.save();
-    res.send(201);
+    //check if user with given user_name exists
+    User.findOne({ user_name: req.body.user_name}, function (err, user) {
+        if (user == null) {
+            var user = User(req.body);
+            user.save();
+            res.send(201);
+        }
+        else {
+            res.status(404).send('User with a provided user name already exists.');
+        }
+    })
 };
 
 module.exports = {

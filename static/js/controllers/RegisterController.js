@@ -1,15 +1,5 @@
 controllers.controller('RegisterController', function ($scope, registerService) {
 
-    messages = {
-        "userRegistrationMessageSuccess": "Successfully registered new user!",
-        "userRegistrationMessageError": "Error registering new user!"
-    };
-
-    $scope.isInvalida = false;
-    $scope.usernameChange = function () {
-        $scope.isInvalid = false;
-    }
-
     $scope.registration = {};
     $scope.saveData = function () {
         console.log($scope.registration);
@@ -19,14 +9,14 @@ controllers.controller('RegisterController', function ($scope, registerService) 
             console.log("[INFO] New user has been registered!");
             $scope.registerSuccess=true;
             $scope.registerError=false;
-            $scope.registerMessage=messages.userRegistrationMessageSuccess;
+            $scope.registerMessage="Successfully registered new user!";
         };
 
-        var onCancel = function () {
+        var onCancel = function (res) {
             console.log("[INFO] User registration has failed");
             $scope.registerSuccess=false;
             $scope.registerError=true;
-            $scope.registerMessage=messages.userRegistrationMessageError;
+            $scope.registerMessage=res;
         };
 
         registerService.registerNewUser($scope.registration, onSuccess, onCancel);

@@ -8,12 +8,14 @@ services.factory('registerService', function ($http) {
      */
     service.registerNewUser = function (data, onSuccess, onFailure) {
 
-        $http.post('/register', data)
-            .success(onSuccess)
-            .error(onFailure);
-    };
+            $http.post('/register', data)
+                .success(onSuccess)
+                .error(onFailure);
+        };
 
 
-    return service;
+        return service;
 
-});
+    }
+    )
+    ;
