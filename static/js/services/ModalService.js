@@ -144,19 +144,23 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 	};
 
 
-	var userEventCtrl = function($scope, $modalInstance, selectedTimestamp) {
+	var userEventCtrl = function($scope, $modalInstance, selectedTimestamp, isTerm) {
 
 		$scope.modal = {};
 		$scope.modal.duration = 1;
 		$scope.modal.selectedTimestamp = selectedTimestamp;
 
+		$scope.modal.isTerm = isTerm;
+
 		$scope.modal.ok = function() {
-			var duration = $scope.modal.duration;
+
 			var result = {
 				duration : $scope.modal.duration,
 				selectedTimestamp : selectedTimestamp,
-				availability : $scope.modal.availability
 			};
+            if (!isTerm) {
+                result.availability = $scope.modal.availability;
+            }
 			$modalInstance.close(result);
 		};
 
@@ -167,13 +171,14 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 	};
 
 
-	service.newUserEventModal = function(onConfirm, onCancel, selectedTimestamp) {	
+	service.newUserEventModal = function(onConfirm, onCancel, selectedTimestamp, isTermModal) {	
 
 		var modalInstance = $modal.open({
 			templateUrl: 'views/modals/event',
 			controller: userEventCtrl,
 			resolve : {
-				selectedTimestamp : function() { return selectedTimestamp; }
+				selectedTimestamp : function() { return selectedTimestamp; },
+				isTerm : function() { return isTermModal; }
 			}
 		});
 

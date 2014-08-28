@@ -1,6 +1,6 @@
 <div class="container pagination-centered">
 
-	<div ng-show="poll">
+	<div ng-show="poll && !poll.is_closed">
 		<div class="container" ng-show="!poll.isDeclarationClosed">
 			<div class="row">
 				<div class="panel panel-default">
@@ -32,6 +32,12 @@
 				<li ng-class="{pointer: addPhase, active: addPhase}"><a ng-click="saveEvent()">Save</a></li>
 			</ul>
 		</div>
+        <div class="container align" ng-show="canEdit">
+            <ul class="nav nav-pills pull-right"/>
+                <li ng-show="!isDeclarationClosed" class="pointer"><a ng-click="finishDeclaration()">Finish declaration phase</a></li>
+                <li class="pointer"><a ng-click="finishVoting()">Close poll</a></li>
+            </ul>
+        </div>
 	</div>
 	<div class="container">
 		<alert ng-show="pollSuccess" type="success">

@@ -13,11 +13,13 @@ var pollSchema = new Schema({
     end_time: Date,
     declaration_end_time: Date,
     is_declaration_closed: {type: Boolean, "default": false},
+    is_closed: {type:Boolean, "default":false},
     creator_id: {type: String, "default": null},
     creator_name: {type: String, "default": "guest"},
     creator_mail: String,
     creation_token: String,
-    required_groups: {type: Array, "default": []}
+    required_groups: {type: Array, "default": []},
+    selected_terms: {type: Array, "default": []}    //object { termId, startDate, endDate, count }
 });
 
 pollSchema.virtual('id')

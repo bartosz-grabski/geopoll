@@ -41,3 +41,5 @@ app.get('/userpolls/:poll_id', routes.userPollGET);
 app.post('/userpoll', routes.userPollPOST);
 app.delete('/poll/:poll_id/term/:term_id', routes.deleteTerm);
 app.post('/poll/:poll_id/term', routes.addTerm);
+app.post('/poll/:poll_id/term/vote/:term_id', routes.voteOnTerm);
+app.post('/poll/:poll_id', routes.pollPOST);

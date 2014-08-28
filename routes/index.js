@@ -47,8 +47,21 @@ var pollGET = function (req, res) {
                 
                 
                 var pollObj = poll.toObject();
+                if (pollObj.is_closed) {
+                    res.send({is_closed:true});
+                    return;
+                }
+
+
+
                 var isDeclarationClosed = pollObj.is_declaration_closed;
                 var today = new Date(); // should we care about timezones somehow ?
+
+                if (pollObj.end_time < today) {
+                    poll.is_closed = true;
+                    poll.save();
+                    res.send({is_closed:true});
+                }
 
                 pollObj.isDeclarationClosed = isDeclarationClosed;
 
@@ -153,40 +166,29 @@ var index = function (req, res) {
 
 var addTerm = function (req, res) {
 
-    var pollId = Poll.extractId(req.param('poll_id'));
+    var pollId = Poll.extractID(req.param('poll_id'));
 
     Poll.findById(pollId, function(err, poll) {
         if (err) {
             res.send(500);
-        } else if (!poll.is_declaration_closed) {
+        } else if (!poll.is_declaration_closed || !poll) {
             res.send(400);
         } else {
 
-            if (!poll.selected_terms) {
-                
-                terms = { 
-                    nextTermId : 0,
-                    terms : [] //object { termId, startDate, endDate } 
-                }
-
-                poll.selected_terms = terms;
-
-            }
-
             var term = req.body;
 
-            term.id = poll.selected_terms.nextTermId++;
+            term.id = (Math.random(2000) + 1000).toString(32).substring(6);
+            term.votedFor = 0;
 
-            poll.selected_terms.terms.push(term);
+            if (!poll.selected_terms) {
+                poll.selected_terms = [];
+            }
 
-            Poll.findByIdAndUpdate(pollId,poll,function(err,poll) {
-                if (err) {
-                    res.send(500);
-                } else {
-                    res.send(201, term);
-                }
-            })
+            poll.selected_terms.push(term);
 
+            poll.save();
+
+            res.send(201, term);
          }
     });
 
@@ -194,7 +196,148 @@ var addTerm = function (req, res) {
 
 var deleteTerm = function (req, res) {
 
+    var pollId = Poll.extractID(req.param('poll_id'));
+    var termId = req.param('term_id');
+
+    Poll.findById(pollId, function(err, poll) {
+        if (err) {
+            res.send(500);
+        } else if (!poll.is_declaration_closed || !poll) {
+            res.send(400);
+        } else {
+            if (poll.selected_terms) {
+                for (var i = 0; i < poll.selected_terms.length; i++) {
+                    if (poll.selected_terms[i].id === termId) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                poll.selected_terms.splice(index,1);
+                poll.markModified("selected_terms");    //otherwise doesn't work (?!)
+                poll.save(function(err,poll) {
+                    if(err) {
+                        res.send(400, err);
+                    } else {
+                        res.send(201);
+                    }
+                })
+            } else {
+                res.send(400);
+            }
+
+        }
+    });
+
+
 };
+
+var voteOnTerm = function (req, res) {
+
+    var pollId = Poll.extractID(req.param('poll_id'));
+    var termId = req.param('term_id');
+
+    Poll.findById(pollId, function(err, poll) {
+        if (err) {
+            res.send(500);
+        } else if (!poll.is_declaration_closed || !poll) {
+            res.send(400);
+        } else {
+            if (poll.selected_terms) {
+                for (var i = 0; i < poll.selected_terms.length; i++) {
+                    if (poll.selected_terms[i].id === termId) {
+                        if (!poll.selected_terms[i].votedFor) {
+                            poll.selected_terms[i].votedFor = 0;
+                        }
+                        poll.selected_terms[i].votedFor += 1;
+                        break;
+                    };
+                };
+
+                poll.markModified("selected_terms");    //otherwise doesn't work (?!)
+                poll.save(function(err,poll) {
+                    if(err) {
+                        res.send(400, err);
+                    } else {
+                        res.send(201);
+                    }
+                })
+            } else {
+                res.send(400);
+            }
+
+        }
+    });
+
+};
+
+var pollPOST = function(req,res) {
+    if (req.body.operation) {
+        var operation = req.body.operation;
+        var pollId = Poll.extractID(req.param('poll_id'));
+        if (operation === "FINISH_VOTING_PHASE") {
+            Poll.findById(pollId, function(err,poll) {
+               if (err) {
+                   res.send(500);
+               }
+               poll.is_closed = true;
+               poll.save();
+               _sendClosedMail(poll);
+               res.send(200);
+            });
+        } else if (operation === "FINISH_DECLARATION_PHASE") {
+            Poll.findById(pollId, function(err, poll) {
+               if(err) {
+                   res.send(500);
+               }
+               poll.is_declaration_closed = true;
+               poll.save();
+               _sendDeclarationClosedMail(poll);
+               res.send(200);
+            });
+        } else {
+            res.send(400, { "message" : "unknown operation type"});
+        }
+    } else {
+        res.send(400);
+    }
+};
+
+var _sendClosedMail = function(poll) {
+
+    var locals = {
+        email: poll.creator_mail,
+        subject: 'Your poll has been closed!',
+        poll: 'http://localhost:3000/#/poll/' + poll.id,
+        creatorName: poll.creator_name
+    };
+
+    //TODO - notify user about results in email
+
+    emailService.send('closed_poll', locals, function (err, responseStatus,html,text) {
+
+    });
+};
+
+var _sendDeclarationClosedMail = function(poll) {
+
+    var notificationType = poll.notification_type;
+
+    var locals = {
+        email: poll.creator_mail,
+        subject: 'Your poll\'s declaration phase has been closed!',
+        poll: 'http://localhost:3000/#/poll/' + poll.id,
+        editPoll: 'http://localhost:3000/#/poll/' + poll.idWithToken,
+        creatorName: poll.creator_name
+    };
+
+    emailService.send('closed_decl_poll', locals, function (err, responseStatus,html,text) {
+
+    });
+};
+
+
+
 
 module.exports = {
     create: create,
@@ -207,5 +350,7 @@ module.exports = {
     userPollPOST: userPollPOST,
     userPollGET: userPollGET,
     addTerm: addTerm,
-    deleteTerm: deleteTerm
+    deleteTerm: deleteTerm,
+    voteOnTerm: voteOnTerm,
+    pollPOST: pollPOST
 };

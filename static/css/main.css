@@ -73,3 +73,7 @@ body {
   }
 }
 /* timepicker vertical align */
+
+.align {
+    margin-top:30px;
+}

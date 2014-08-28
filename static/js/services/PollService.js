@@ -1,7 +1,14 @@
 services.factory('pollService', function ($http,$location,$window) {
 
     var service = {};
-    
+
+    var genericPollPost = function(pollId,payload,onSuccess,onFailure) {
+        $http.post("/poll/"+pollId, payload)
+        .success(onSuccess)
+        .error(onFailure);
+    }
+
+
     /**
     *	Sends post request to create a new poll, handles response
     *
@@ -111,6 +118,37 @@ services.factory('pollService', function ($http,$location,$window) {
         .success(onSuccess)
         .error(onFailure);
     };
+
+    service.voteOnTerm = function(pollId, termId, onSuccess, onFailure) {
+        $http.post("/poll/"+pollId+"/term/vote/"+termId)
+        .success(onSuccess)
+        .error(onFailure);
+    };
+
+    service.deleteTerm = function(pollId, termId, onSuccess, onFailure) {
+        $http.delete("/poll/"+pollId+"/term/"+termId)
+        .success(onSuccess)
+        .error(onFailure);
+    }
+
+    service.finishDeclarationPhase = function(pollId, onSuccess, onFailure) {
+
+        var payload = {
+            operation : "FINISH_DECLARATION_PHASE"
+        };
+
+        genericPollPost(pollId,payload,onSuccess,onFailure);
+
+    }
+
+    service.finishVotingPhase = function(pollId, onSuccess, onFailure) {
+
+        var payload = {
+            operation: "FINISH_VOTING_PHASE"
+        };
+
+        genericPollPost(pollId,payload,onSuccess,onFailure);
+    }
     
     return service;
 });

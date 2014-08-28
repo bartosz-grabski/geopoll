@@ -1,4 +1,4 @@
-controllers.controller('PollController', function ($scope, $rootScope, $location, $window, pollService, modalService, $routeParams, timelineService) {
+controllers.controller('PollController', function ($scope, $rootScope, $location, $window, pollService, modalService, $routeParams, timelineService, $timeout, $route) {
 
 
 	
@@ -7,7 +7,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         "updateSuccess": "Poll successfully updated!",
         "pollNotFound" : "No poll with provided id!",
         "declarationClosed" : "Declaration phase is closed now. Vote on selected terms",
-        "declarationClosedEditable" : "Declaration phase is close. Please choose terms to vote on"
+        "declarationClosedEditable" : "Declaration phase is closed now. Please choose terms to vote on"
     };
 
     $scope.messages = messages;
@@ -40,6 +40,62 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         modalService.updatePollModal(pollService.networkToGui($scope.poll), onConfirm);
     };
 
+    $scope.voteOnTerm = function(termId) {
+
+        var onSuccess = function(data) {
+            console.log("[INFO] Succesfully voted on a term");
+        };
+
+        var onError = function(err) {
+            console.log("[ERROR] There was an error during voting on a term :"+ err);
+        };
+
+        pollService.voteOnTerm($scope.poll._id, termId, onSuccess, onError);
+    };
+
+    $scope.deleteTerm = function(termId) {
+
+        var onSuccess = function(data) {
+            console.log("[INFO] Succesfully deleted a term");
+            timelineService.deleteTermAndReload(termId);
+        };
+
+        var onError = function(err) {
+            console.log("[ERROR] There was an error during deleting a term :"+ err);
+        };
+
+        pollService.deleteTerm($scope.poll._id, termId, onSuccess, onError);
+
+    };
+
+    $scope.finishDeclaration = function() {
+
+        var onSuccess = function(data) {
+            console.log("[INFO] Successfully finished poll's declaration phase");
+            $route.reload();
+        };
+
+        var onFailure = function() {
+            console.log("[ERROR] Failed to finish poll's declaration phase");
+        };
+
+        pollService.finishDeclarationPhase($routeParams.id, onSuccess, onFailure);
+    };
+
+    $scope.finishVoting = function() {
+
+        var onSuccess = function(data) {
+            console.log("[INFO] Successfully finished poll's declaration phase");
+            $route.reload();
+        };
+
+        var onFailure = function() {
+            console.log("[ERROR] Failed to finish poll's declaration phase");
+        };
+
+        pollService.finishVotingPhase($routeParams.id, onSuccess, onFailure);
+    };
+
 
     function getUserPolls() {
 
@@ -55,30 +111,38 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     };
 
-    function getChosenTerms() {
-
-    };
-
-
-
 
     function getPollInfo() {
 
         var onSuccess = function (data) {
 
+            if (data.is_closed) {
+                $scope.pollError = true;
+                $scope.currentMessage = "Poll has been closed!";
+                return;
+            }
+
             $scope.poll = data;
             $scope.canEdit = data.can_edit;
             $scope.chosenTerms = data.chosenTerms; //array of objects
             if (data.can_edit && data.isDeclarationClosed) {
-                $scope.newEvent = newTerm;
-                $scope.saveEvent = saveTerm;
                 $scope.declarationClosedMessage = messages.declarationClosedEditable;
-
-                timelineService.loadTerms();
+                $scope.eventDisabled = true;
+                $timeout(function() { //interesting, otherwise it doesn't work, perhaps updating UI ($scope =, causes timeline loading to be blocked)
+                    timelineService.loadTerms(data.selected_terms);
+                    timelineService.enableTimeline("asd",[]);
+                    timelineService.setPoll(data,data._id);
+                }, 0, false);
 
             } else if (data.isDeclarationClosed) {
                 $scope.eventDisabled = true;
+                $timeout(function() {
+                    timelineService.loadTerms(data.selected_terms);
+                }, 0, false);
+            } else {
+                getUserPolls();
             }
+
         };
 
         var onError = function () {
@@ -91,14 +155,6 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
 
         pollService.getPollInfo($routeParams.id, onSuccess, onError);
-
-    }
-
-    function newTerm() {
-
-    }
-
-    function saveTerm () {
 
     }
 
@@ -157,8 +213,8 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     $scope.newEvent = newUserPoll;  // when declaration is closed then it's swapped for newTerm, saveTerm
     $scope.saveEvent = saveUserPoll;
-
     timelineService.load("tl");
+    timelineService.setScope($scope);
 
     getPollInfo();
     
