@@ -16,6 +16,8 @@ app.use(express.logger('dev'));
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
+app.use(express.cookieParser());
+app.use(express.session({secret: '1234567890QWERTY'}));
 app.use(app.router);
 
 
@@ -31,6 +33,7 @@ http.createServer(app).listen(app.get('port'), function () {
 mongoose.connect('mongodb://' + dbConfig["dbHost"] + ":" + dbConfig["dbPort"] + "/" + dbConfig["dbDatabase"]);
 
 app.get('/', routes.index);
+app.get('/home', routes.homeGET);
 app.post('/create', routes.create);
 app.put('/poll/:id', routes.pollPUT);
 app.get('/poll/:id', routes.pollGET);
@@ -42,3 +45,4 @@ app.post('/userpoll', routes.userPollPOST);
 app.get('/register', routes.registerGET);
 app.post('/register', routes.registerPOST);
 app.get('/login', routes.loginGET);
+app.post('/login', routes.loginPOST);

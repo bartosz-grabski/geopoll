@@ -118,6 +118,10 @@ var index = function (req, res) {
     res.render('index');
 };
 
+var homeGET = function (req, res) {
+    res.render('home');
+};
+
 var registerGET = function (req, res) {
     res.render('register');
 };
@@ -131,14 +135,32 @@ var registerPOST = function (req, res) {
             res.send(201);
         }
         else {
-            res.status(404).send('User with a provided user name already exists.');
+            res.status.send('User with a provided user name already exists.');
         }
     })
 };
 
-var loginGET = function(req, res){
+var loginGET = function (req, res) {
     res.render('login');
-}
+};
+
+var loginPOST = function (req, res) {
+    User.findOne({ user_name: req.body.user_name}, function (err, user) {
+        if (user == null) {
+            res.status(401).send('User with a provided user name does not exist.');
+        }
+        else {
+            if (req.body.hashed_password === user.hashed_password) {
+                req.session.user_id = user.id;
+                res.send(201);
+            } else {
+                res.status(401).send('Bad password');
+            }
+        }
+    });
+
+
+};
 
 module.exports = {
     create: create,
@@ -152,5 +174,7 @@ module.exports = {
     userPollGET: userPollGET,
     registerGET: registerGET,
     registerPOST: registerPOST,
-    loginGET: loginGET
+    loginGET: loginGET,
+    loginPOST: loginPOST,
+    homeGET: homeGET
 };
