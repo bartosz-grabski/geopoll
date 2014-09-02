@@ -44,8 +44,7 @@ var pollGET = function (req, res) {
 
         Poll.findById(pollID, function (err, poll) {
 			if(poll) {
-                
-                
+
                 var pollObj = poll.toObject();
                 if (pollObj.is_closed) {
                     res.send({is_closed:true});
@@ -104,37 +103,38 @@ var pollPUT = function (req, res) {
                 console.log(err);
                 res.send(403);
             } else {
-            	console.log("asd");
-            	res.send(200);
+                console.log("asd");
+                res.send(200);
             }
         });
     }
 };
 
 var userPollGET = function (req, res) {
-	if (!Poll.isIDWithOrWithoutTokenFormatCorrect(req.param('poll_id'))) {
-		res.status(404).send('Incorrect id or id and token combination');
-	} else {
-		var pollId = Poll.extractID(req.param('poll_id'));
-		console.log(pollId);
-		UserPoll.find( { poll_id : pollId }, function (err, userPolls) {
-			if (err) {
+    if (!Poll.isIDWithOrWithoutTokenFormatCorrect(req.param('poll_id'))) {
+        res.status(404).send('Incorrect id or id and token combination');
+    } else {
+        var pollId = Poll.extractID(req.param('poll_id'));
+        console.log(pollId);
+        UserPoll.find({ poll_id: pollId }, function (err, userPolls) {
+            if (err) {
                 console.log(err);
                 res.status(404).send('No poll with provided id');
-			} else {
-				var userPollObjects = userPolls;
-				res.send(userPollObjects);
-			}
-		});
-	}
+            } else {
+                var userPollObjects = userPolls;
+                res.send(userPollObjects);
+            }
+        });
+    }
 };
 
-var userPollPOST = function(req, res) {
-	
-    var pollId = Poll.extractID(req.param('poll_id'));
-	req.body.poll_id = pollId;
 
-    Poll.findById(pollId, function(err, poll) {
+var userPollPOST = function (req, res) {
+
+    var pollId = Poll.extractID(req.param('poll_id'));
+    req.body.poll_id = pollId;
+
+    Poll.findById(pollId, function (err, poll) {
 
         if (err) {
             res.send(500);
@@ -147,7 +147,6 @@ var userPollPOST = function(req, res) {
         res.send(201);
 
     });
-    
 };
 
 var view = function (req, res) {
@@ -155,9 +154,9 @@ var view = function (req, res) {
     res.render(view);
 };
 
-var modal = function (req,res) {
-	var modal = req.params.modal;
-	res.render("modals/"+modal);
+var modal = function (req, res) {
+    var modal = req.params.modal;
+    res.render("modals/" + modal);
 };
 
 var index = function (req, res) {
@@ -337,7 +336,49 @@ var _sendDeclarationClosedMail = function(poll) {
 };
 
 
+var homeGET = function (req, res) {
+    res.render('home');
+};
 
+var registerGET = function (req, res) {
+    res.render('register');
+};
+
+var registerPOST = function (req, res) {
+    //check if user with given user_name exists
+    User.findOne({ user_name: req.body.user_name}, function (err, user) {
+        if (user == null) {
+            var user = User(req.body);
+            user.save();
+            res.send(201);
+        }
+        else {
+            res.status.send('User with a provided user name already exists.');
+        }
+    })
+};
+
+var loginGET = function (req, res) {
+    res.render('login');
+};
+
+var loginPOST = function (req, res) {
+    User.findOne({ user_name: req.body.user_name}, function (err, user) {
+        if (user == null) {
+            res.status(401).send('User with a provided user name does not exist.');
+        }
+        else {
+            if (req.body.hashed_password === user.hashed_password) {
+                req.session.user_id = user.id;
+                res.send(201);
+            } else {
+                res.status(401).send('Bad password');
+            }
+        }
+    });
+
+
+};
 
 module.exports = {
     create: create,
@@ -352,5 +393,10 @@ module.exports = {
     addTerm: addTerm,
     deleteTerm: deleteTerm,
     voteOnTerm: voteOnTerm,
-    pollPOST: pollPOST
+    pollPOST: pollPOST,
+    registerGET: registerGET,
+    registerPOST: registerPOST,
+    loginGET: loginGET,
+    loginPOST: loginPOST,
+    homeGET: homeGET
 };
