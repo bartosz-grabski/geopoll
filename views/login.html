@@ -1,0 +1,56 @@
+<div>
+    <h4 class="text-muted">Log in</h4>
+
+    <alert ng-show="loginSuccess" type="success">
+        <span>{{loginMessage}}</span>
+    </alert>
+    <alert ng-show="loginError" type="danger">
+        <span>{{loginMessage}}</span>
+    </alert>
+
+
+    <form class="form-horizontal" role="form" ng-model="loginForm" name="loginForm"
+          novalidate>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="user_name">Username</label>
+
+            <div class="col-sm-4 controls">
+                <input type='text' ng-model="login.user_name" ng-pattern="/^[A-Za-z0-9_-]*$/" ng-minlength="3"
+                       ng-maxlength="20" ng-trim="false" ng-change="usernameChange()" id='user_name' name='user_name'
+                       value='' class="form-control"
+                       required/>
+                <span ng-show="loginForm.user_name.$error.required"><i>Username is required</i></span>
+                <span ng-show="loginForm.user_name.$error.minlength"><i>Username is too short. Minimum lenght is
+                    3</i></span>
+                <span ng-show="loginForm.user_name.$error.maxlength"><i>Username is too long. Maximum length is
+                    20</i></span>
+                <span ng-show="loginForm.user_name.$error.pattern"><i>You can use only letters, numbers, hyphen -
+                    and underscore _ </i></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="hashed_password">Password</label>
+
+            <div class="col-sm-4 controls">
+                <input type='password' ng-model="login.hashed_password" ng-minlength="3"
+                       ng-maxlength="20" name='hashed_password'
+                       id='hashed_password'
+                       class="form-control" required/>
+                <span ng-show="loginForm.hashed_password.$error.required"><i>Password is required</i></span>
+                <span ng-show="loginForm.hashed_password.$error.minlength"><i>Password is too short. Minimum 3
+                    characters.</i></span>
+                <span ng-show="loginForm.hashed_password.$error.maxlength"><i>Password is too long. Maximum 20
+                    characters.</i></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" ng-click="saveData()"
+                    ng-disabled="loginForm.$invalid || !loginForm.$dirty"
+                    class="col-sm-offset-2 btn btn-primary">Log in
+            </button>
+        </div>
+
+    </form>
+</div>

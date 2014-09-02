@@ -1,8 +1,8 @@
 // The UserPoll model
 
-var mongoose = require('mongoose')
-    , Schema = mongoose.Schema
-    , ObjectId = Schema.ObjectId;
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId;
 
 var userPollSchema = new Schema({
     poll_id: ObjectId,
@@ -10,12 +10,11 @@ var userPollSchema = new Schema({
     user_name: String,
     user_mail: String,
     chosen_groups: {type: Array, "default": []},
-    time_slots: [
-        {
-            timeStart: Date,
-            timeEnd: Date
-        }
-    ]
+    time_slots: {
+    	type : Array,
+        "default" : []
+    }
+    // {timeStart,timeEnd,type}
 });
 
 

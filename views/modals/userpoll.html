@@ -1,0 +1,27 @@
+<div class="modal-header">
+	<h3 class="modal-title">Choose values </h3>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal" role="form" name="pollForm">
+		<div class="form-group">
+			<label for="username" class="col-sm-3 control-label">Name</label>
+			<div class="col-sm-9">
+				<input name="username" ng-model="modal.username" ng-trim="false" class="form-control"
+				placeholder="username" autoofcus="true"
+				type="text"
+				required id="username"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="groups" class="col-sm-3 control-label">Name</label>
+			<div class="col-sm-4">
+				<select name="groups" ng-model="modal.selectedGroups" multiple ng-options="group[0] for group in modal.groups">
+				</select>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="modal.ok()">OK</button>
+	<button class="btn btn-warning" ng-click="modal.cancel()">Cancel</button>
+</div>

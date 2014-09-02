@@ -1,0 +1,98 @@
+<div>
+    <h4 class="text-muted">Register</h4>
+
+    <alert ng-show="registerSuccess" type="success">
+        <span>{{registerMessage}}</span>
+    </alert>
+    <alert ng-show="registerError" type="danger">
+        <span>{{registerMessage}}</span>
+    </alert>
+
+
+    <form class="form-horizontal" role="form" ng-model="registrationForm" name="registrationForm"
+          novalidate>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="user_name">Username</label>
+
+            <div class="col-sm-4 controls">
+                <input type='text' ng-model="registration.user_name" ng-pattern="/^[A-Za-z0-9_-]*$/" ng-minlength="3"
+                       ng-maxlength="20" ng-trim="false" ng-change="usernameChange()" id='user_name' name='user_name'
+                       value='' class="form-control"
+                       required/>
+                <span ng-show="registrationForm.user_name.$error.required"><i>Username is required</i></span>
+                <span ng-show="registrationForm.user_name.$error.minlength"><i>Username is too short. Minimum lenght is
+                    3</i></span>
+                <span ng-show="registrationForm.user_name.$error.maxlength"><i>Username is too long. Maximum length is
+                    20</i></span>
+                <span ng-show="registrationForm.user_name.$error.pattern"><i>You can use only letters, numbers, hyphen -
+                    and underscore _ </i></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="first_name">First Name</label>
+
+            <div class="col-sm-4 controls">
+                <input type='text' ng-model="registration.first_name" ng-pattern="/^[A-Za-z]*$/" id='first_name'
+                       name='first_name' value=''
+                       class="form-control" required/>
+                <span ng-show="registrationForm.first_name.$error.required"><i>First name is required</i></span>
+                <span ng-show="registrationForm.first_name.$error.pattern"><i>You are allowed to use only
+                    letters</i></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="last_name">Last Name</label>
+
+            <div class="col-sm-4 controls">
+                <input type='text' ng-model="registration.last_name" ng-pattern="/^[A-Za-z]*$/" id='last_name'
+                       name='last_name' value=''
+                       class="form-control" required/>
+                <span ng-show="registrationForm.last_name.$error.required"><i>Last name is required</i></span>
+                <span ng-show="registrationForm.last_name.$error.pattern"><i>You are allowed to use only
+                    letters</i></span>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="hashed_password">Password</label>
+
+            <div class="col-sm-4 controls">
+                <input type='password' ng-model="registration.hashed_password" ng-minlength="3"
+                       ng-maxlength="20" name='hashed_password'
+                       id='hashed_password'
+                       class="form-control" required/>
+                <span ng-show="registrationForm.hashed_password.$error.required"><i>Password is required</i></span>
+                <span ng-show="registrationForm.hashed_password.$error.minlength"><i>Password is too short. Minimum 3
+                    characters.</i></span>
+                <span ng-show="registrationForm.hashed_password.$error.maxlength"><i>Password is too long. Maximum 20
+                    characters.</i></span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="email">Email</label>
+
+            <div class="col-sm-4 controls">
+                <input type='text' ng-model="registration.email"
+                       ng-pattern="/[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\.[a-zA-Z]{2,4}/" name='email' id='email'
+                       class="form-control" required/>
+                <span ng-show="registrationForm.email.$error.required"><i>Email is required</i></span>
+                <span ng-show="registrationForm.email.$error.pattern"><i>This is not an e-mail address.</i></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" ng-click="saveData()"
+                    ng-disabled="registrationForm.$invalid || !registrationForm.$dirty"
+                    class="col-sm-offset-2 btn btn-primary">Register
+            </button>
+            <button type="reset" class="btn">Cancel</button>
+        </div>
+
+
+    </form>
+</div>
