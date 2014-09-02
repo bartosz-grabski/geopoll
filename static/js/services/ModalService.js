@@ -22,13 +22,13 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 	service.confirmPollCreateModal = function(name, description, onConfirm, onCancel) {
 		
 		var modalInstance = $modal.open({
-			templateUrl: 'confirm.html',
+			templateUrl: 'views/modals/create',
 			controller: confirmPollCreateCtrl,
 			resolve: {
-				onConfirm: function() { return onConfirm },
-				onCancel: function() { return onCancel },
-				name: function() { return name },
-				description: function() { return description }
+				onConfirm: function() { return onConfirm; },
+				onCancel: function() { return onCancel; },
+				name: function() { return name; },
+				description: function() { return description; }
 			}
 		});
 
@@ -37,16 +37,16 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			$log.info('Modal dismissed at: ' + new Date());
 		});
 
-	}
+	};
 
 	var updatePollCtrl = function($scope, $modalInstance, data, onConfirm, onCancel) {
 
 		$scope.modal = data;
 
-		$scope.modal.timezones = pollService.timezones;
 		$scope.modal.today = datepickerService.today($scope.modal);
 
 		$scope.modal.today();
+		$scope.modal.groupCount = 1;
 
 		$scope.modal.startTime = $scope.modal.dt;
 		$scope.modal.endTime = $scope.modal.dt;
@@ -64,9 +64,10 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		$scope.modal.format = datepickerService.format;
 
 		var temp = {};
-
-		for (group in $scope.modal.groups) {
-			temp[group] = true;
+		console.log($scope.modal.groups);
+		for (var group in $scope.modal.groups) {
+			console.log(group);
+			temp[$scope.modal.groups[group][0]] = $scope.modal.groups[group][1];
 		}
 
 		$scope.modal.groups = temp;
@@ -74,7 +75,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		var gatherPollInfo = pollService.gatherPollInfo($scope.modal);
 
 		$scope.modal.addNewGroup = function() {
-        	$scope.modal.groups[$scope.modal.newGroup] = true;
+        	$scope.modal.groups[$scope.modal.newGroup] = $scope.modal.groupCount;
     	};
 
     	$scope.modal.showGroupLabel = function (group) {
@@ -94,20 +95,96 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 			$modalInstance.dismiss('cancel');
 			if (onCancel) onCancel();
 		};
-	}
+	};
 
 	service.updatePollModal = function(data,onConfirm,onCancel) {
 
 		var modalInstance = $modal.open({
-			templateUrl: 'update.html',
+			templateUrl: 'views/modals/update',
 			controller: updatePollCtrl,
 			resolve: {
-				onConfirm: function() { return onConfirm },
-				onCancel: function() { return onCancel },
-				data : function() { return data }
+				onConfirm: function() { return onConfirm; },
+				onCancel: function() { return onCancel; },
+				data : function() { return data; }
 			}
 		});
-	}
+	};
+
+	var userPollCtrl = function($scope, $modalInstance, onConfirm, onCancel, groups) {
+
+		$scope.modal = {};
+		$scope.modal.groups = groups;
+
+		$scope.modal.ok = function() {
+			var username = $scope.modal.username;
+			var groups = $scope.modal.selectedGroups;
+			$modalInstance.close({username:username, groups:groups});
+		};
+
+		$scope.modal.cancel = function() {
+			$modalInstance.dismiss('cancel');
+		};
+
+	};
+
+
+	service.newUserPollModal = function(onConfirm, onCancel, groups) {
+
+		var modalInstance = $modal.open({
+			templateUrl: 'views/modals/userpoll',
+			controller: userPollCtrl,
+			resolve: {
+				onConfirm: function() { return onConfirm; },
+				onCancel: function() { return onCancel; },
+				groups: function() { return groups;}
+			}
+		});
+
+		modalInstance.result.then(onConfirm, onCancel);
+	};
+
+
+	var userEventCtrl = function($scope, $modalInstance, selectedTimestamp, isTerm) {
+
+		$scope.modal = {};
+		$scope.modal.duration = 1;
+		$scope.modal.selectedTimestamp = selectedTimestamp;
+
+		$scope.modal.isTerm = isTerm;
+
+		$scope.modal.ok = function() {
+
+			var result = {
+				duration : $scope.modal.duration,
+				selectedTimestamp : selectedTimestamp,
+			};
+            if (!isTerm) {
+                result.availability = $scope.modal.availability;
+            }
+			$modalInstance.close(result);
+		};
+
+		$scope.modal.cancel = function() {
+			$modalInstance.dismiss('cancel');
+		};
+
+	};
+
+
+	service.newUserEventModal = function(onConfirm, onCancel, selectedTimestamp, isTermModal) {	
+
+		var modalInstance = $modal.open({
+			templateUrl: 'views/modals/event',
+			controller: userEventCtrl,
+			resolve : {
+				selectedTimestamp : function() { return selectedTimestamp; },
+				isTerm : function() { return isTermModal; }
+			}
+		});
+
+		modalInstance.result.then(onConfirm,onCancel);
+
+	};
 
 	return service;
 });

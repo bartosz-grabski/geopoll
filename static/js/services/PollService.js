@@ -1,7 +1,14 @@
 services.factory('pollService', function ($http,$location,$window) {
 
     var service = {};
-    
+
+    var genericPollPost = function(pollId,payload,onSuccess,onFailure) {
+        $http.post("/poll/"+pollId, payload)
+        .success(onSuccess)
+        .error(onFailure);
+    }
+
+
     /**
     *	Sends post request to create a new poll, handles response
     *
@@ -11,19 +18,19 @@ services.factory('pollService', function ($http,$location,$window) {
     	$http.post('/create',data)
     	.success(onSuccess)
     	.error(onFailure);
-    }
+    };
 
     service.getPollInfo = function(pollId,onSuccess,onFailure) {
     	$http.get('/poll/'+pollId)
     	.success(onSuccess)
     	.error(onFailure);
-    }
+    };
 
     service.updatePoll = function(pollId,data,onSuccess,onFailure) {
     	$http.put(/poll/+pollId,data)
     	.success(onSuccess)
     	.error(onFailure);
-    }
+    };
 
     service.gatherPollInfo = function($scope) {
 
@@ -37,8 +44,8 @@ services.factory('pollService', function ($http,$location,$window) {
     		data.timezone = $scope.timezone;
 
     		data.required_groups = [];
-    		for (group in $scope.groups) {
-    			data.required_groups.push(group);
+    		for (var group in $scope.groups) {
+    			data.required_groups.push([group,$scope.groups[group]]);
     		}     
 
     		var startDate = $scope.startDate;
@@ -62,7 +69,7 @@ services.factory('pollService', function ($http,$location,$window) {
     		data.declaration_end_time = declEndDate;
 
     		return data;
-    	}
+    	};
     };
 
     service.networkToGui = function(data) {
@@ -83,12 +90,65 @@ services.factory('pollService', function ($http,$location,$window) {
 		converted.declEndDate = new Date(data.declaration_end_time);
 
     	return converted;
+    };
+
+    // user poll related functions
+
+    service.newUserPoll = function(poll, onSuccess, onFailure) {
+    	$http.post("/userpoll",poll)
+    	.success(onSuccess)
+    	.error(onFailure);
+    };
+
+
+    service.getUserPolls = function(pollId, onSuccess, onFailure) {
+    	$http.get("/userpolls/"+pollId)
+    	.success(onSuccess)
+    	.error(onFailure);
+    };
+
+    service.newTerm = function(pollId, term, onSuccess, onFailure) {
+        $http.post("/poll/"+pollId+"/term", term)
+        .success(onSuccess)
+        .error(onFailure);
+    };
+
+    service.deleteTerm = function(pollId, termId, onSuccess, onFailure) {
+        $http.delete("/poll/"+pollId+"/term/"+termId)
+        .success(onSuccess)
+        .error(onFailure);
+    };
+
+    service.voteOnTerm = function(pollId, termId, onSuccess, onFailure) {
+        $http.post("/poll/"+pollId+"/term/vote/"+termId)
+        .success(onSuccess)
+        .error(onFailure);
+    };
+
+    service.deleteTerm = function(pollId, termId, onSuccess, onFailure) {
+        $http.delete("/poll/"+pollId+"/term/"+termId)
+        .success(onSuccess)
+        .error(onFailure);
     }
 
-    service.timezones = [ 
-        {string : '+05:00'},
-        {string : '+06:00'}
-    ]
+    service.finishDeclarationPhase = function(pollId, onSuccess, onFailure) {
+
+        var payload = {
+            operation : "FINISH_DECLARATION_PHASE"
+        };
+
+        genericPollPost(pollId,payload,onSuccess,onFailure);
+
+    }
+
+    service.finishVotingPhase = function(pollId, onSuccess, onFailure) {
+
+        var payload = {
+            operation: "FINISH_VOTING_PHASE"
+        };
+
+        genericPollPost(pollId,payload,onSuccess,onFailure);
+    }
     
     return service;
 });

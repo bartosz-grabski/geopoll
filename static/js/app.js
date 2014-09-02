@@ -12,6 +12,14 @@ app.config(['$routeProvider',
         	templateUrl: '/views/poll',
         	controller: 'PollController'
         }).
+        when('/register', {
+                templateUrl: '/views/register',
+                controller: 'RegisterController'
+            }).
+        when('/login', {
+                templateUrl: '/views/login',
+                controller: 'LoginController'
+            }).
         otherwise({
             redirectTo: '/home',
             templateUrl: '/views/home'
