@@ -150,11 +150,13 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
                     timelineService.loadTerms(data.selected_terms);
                     timelineService.enableTimeline("asd",[]);
                     timelineService.setPoll(data,data._id);
+                    getUserPolls();
                 }, 0, false);
 
             } else if (data.isDeclarationClosed) {
                 $scope.eventDisabled = true;
                 $timeout(function() {
+                    Timeline.DefaultEventSource.Event.prototype.voting = true;
                     timelineService.loadTerms(data.selected_terms);
                 }, 0, false);
             } else {

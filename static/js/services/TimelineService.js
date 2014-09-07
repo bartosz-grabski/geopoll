@@ -344,11 +344,11 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
         theme.event.bubble.wikiStyler(divWiki);
         elmt.appendChild(divWiki);
 
-        var divVote = doc.createElement("div");
-        this.fillButtons(divVote);
-        elmt.appendChild(divVote);
-
-
+        if (this.voting) {
+            var divVote = doc.createElement("div");
+            this.fillButtons(divVote);
+            elmt.appendChild(divVote);
+        }
 
     };
 
