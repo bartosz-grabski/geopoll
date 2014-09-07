@@ -77,3 +77,19 @@ body {
 .align {
     margin-top:30px;
 }
+
+/* timeframe */
+
+.timeframe {
+    position:absolute;
+    top:-10px;
+    width:200px;
+    height:290px;
+    border: 1px dashed #666;
+    border-top: 10px solid #666;
+    z-index: 999;
+    cursor: pointer;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+}

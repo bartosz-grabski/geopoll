@@ -7,10 +7,23 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         "updateSuccess": "Poll successfully updated!",
         "pollNotFound" : "No poll with provided id!",
         "declarationClosed" : "Declaration phase is closed now. Vote on selected terms",
-        "declarationClosedEditable" : "Declaration phase is closed now. Please choose terms to vote on"
+        "declarationClosedEditable" : "Declaration phase is closed now. Please choose terms to vote on",
+        "toggleTimeframeTrue" : "Toggle timeframe",
+        "toggleTimeframeFalse" : "Disable timeframe"
     };
 
     $scope.messages = messages;
+
+    var timeframe = {};
+
+    timeframe.will = 0;
+    timeframe.wont = 0;
+    timeframe.probably = 0;
+
+    $scope.timeframe = timeframe;
+
+    $scope.toggle = false;
+    $scope.toggleTimeframeMessage = messages.toggleTimeframeTrue;
 
     $scope.addPhase = false;
     $scope.userPolls = [];
@@ -94,6 +107,11 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         };
 
         pollService.finishVotingPhase($routeParams.id, onSuccess, onFailure);
+    };
+
+    $scope.toggleTimeframe = function() {
+        $scope.toggle = $scope.toggle === true ? false : true;
+        $scope.toggleTimeframeMessage = $scope.toggle === false ? messages.toggleTimeframeTrue : messages.toggleTimeframeFalse;
     };
 
 

@@ -24,12 +24,28 @@
 			<alert type="success" ng-show="poll.isDeclarationClosed">
 				<span>{{declarationClosedMessage}}</span>
 			</alert>
-			<div id="tl" style="height: 350px; border: 1px solid #aaa; margin-bottom: 15px"></div>
+            <div class="row" ng-show="toggle">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <ul class="list-group" ng-show="toggle">
+                            <li class="list-group-item" style="color: darkgreen">Will : {{timeframe.will}}</li>
+                            <li class="list-group-item" style="color: darkred">Won't : {{timeframe.wont}}</li>
+                            <li class="list-group-item" style="color: #b8860b">Probably : {{timeframe.probably}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+			<div style="position:relative;">
+                <div id="tl" style="height: 350px; border: 1px solid #aaa; margin-bottom: 15px">
+			    </div>
+                <timeframe ng-show="toggle"/>
+            </div>
 		</div>
 		<div class="container" ng-show="!eventDisabled">
 			<ul class="nav nav-pills pull-right">
 				<li ng-class="{pointer: !addPhase, active: !addPhase}"><a ng-click="newEvent()">New</a></li>
 				<li ng-class="{pointer: addPhase, active: addPhase}"><a ng-click="saveEvent()">Save</a></li>
+                <li class="pointer"><a ng-click="toggleTimeframe()">{{toggleTimeframeMessage}}</a></li>
 			</ul>
 		</div>
         <div class="container align" ng-show="canEdit">
@@ -47,6 +63,7 @@
 			<span>{{currentMessage}}</span>
 		</alert>
 	</div>
+
 </div>
 
 <script src="http://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></script>
