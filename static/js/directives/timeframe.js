@@ -5,19 +5,54 @@ directives.directive("timeframe", function($document, timelineService) {
         $element.addClass("timeframe");
 
         var startX = 0, x = 0;
+        var offsetX = Math.round($element[0].getBoundingClientRect().left);
         var timeline = document.querySelector("#tl");
 
         var timelineWidth = timeline.getBoundingClientRect().width;
         var timeframeWidth = $element[0].getBoundingClientRect().width;
 
-        
+        var resizeConfig = {
+            handles: "e",
+            animate:true,
+            helper: "resize-helper",
+            minHeight: 290,
+            maxHeight: 290,
+            maxWidth: timelineWidth
+        };
+
+        $scope.beginX = startX;
+        $scope.endX = startX + timeframeWidth;
+
+        $element.resizable(resizeConfig);
+
+        $element.on('resizestop', function(e,ui) {
+
+
+            timeframeWidth = ui.helper.width();
+            var beginX = Math.round($element[0].getBoundingClientRect().left);
+            var endX = Math.round(beginX + timeframeWidth);
+
+            $element.resizable("option","maxWidth",timelineWidth - beginX + offsetX);
+
+            var events = timelineService.getEventsInPixelRange(beginX,endX);
+
+            $scope.$apply(function() {
+                $scope.timeframeWidth = timeframeWidth;
+                $scope.updateTimeframeInfo(events,beginX,endX)
+            });
+        });
+
 
         $element.on('mousedown', function(event) {
             // Prevent default dragging of selected content
             event.preventDefault();
+            if (event.target.className.indexOf("handle") > 0) { return; }
             startX = event.pageX - x;
             $document.on('mousemove', mousemove);
             $document.on('mouseup', mouseup);
+
+
+
         });
 
         function mousemove(event) {
@@ -30,37 +65,28 @@ directives.directive("timeframe", function($document, timelineService) {
             $element.css({
                 left:  x + 'px'
             });
+
         }
 
         function mouseup() {
+
             $document.off('mousemove', mousemove);
             $document.off('mouseup', mouseup);
 
-            var beginX = Math.round($element[0].getBoundingClientRect().x);
+            var beginX = Math.round($element[0].getBoundingClientRect().left);
             var endX = Math.round(beginX + timeframeWidth);
 
+            $element.resizable("option","maxWidth",timelineWidth - beginX + offsetX);
+
             var events = timelineService.getEventsInPixelRange(beginX,endX);
+
             $scope.$apply(function() {
-                var timeframe = {};
-
-                timeframe.will = 0;
-                timeframe.wont = 0;
-                timeframe.probably = 0;
-
-                $scope.timeframe = timeframe;
-
-                events.forEach(function(event) {
-                    if (event._color === "red") {
-                        timeframe.wont += 1;
-                    } else if (event._color === "green") {
-                        timeframe.will += 1;
-                    } else if (event._color === "orange") {
-                        timeframe.probably += 1;
-                    }
-                });
+                $scope.updateTimeframeInfo(events,beginX,endX)
             });
 
         }
+
+
     };
 
     return {

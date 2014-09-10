@@ -87,9 +87,14 @@ body {
     height:290px;
     border: 1px dashed #666;
     border-top: 10px solid #666;
-    z-index: 999;
+    z-index: 10;
     cursor: pointer;
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
     border-radius: 20px;
+    box-sizing: content-box;
+}
+
+.resize-helper {
+    border: 1px dashed darkred;
 }

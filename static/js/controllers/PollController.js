@@ -29,6 +29,8 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     $scope.userPolls = [];
     $scope.eventDisabled = false;
     $scope.declarationClosedMessage = messages.declarationClosed;
+    $scope.timeframeWidth = 0;
+    $scope.startX = 0;
 
     $scope.edit = function () {
 
@@ -112,6 +114,31 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     $scope.toggleTimeframe = function() {
         $scope.toggle = $scope.toggle === true ? false : true;
         $scope.toggleTimeframeMessage = $scope.toggle === false ? messages.toggleTimeframeTrue : messages.toggleTimeframeFalse;
+        var events = timelineService.getEventsInPixelRange($scope.startX, $scope.endX);
+        $scope.updateTimeframeInfo(events)
+    };
+
+    $scope.updateTimeframeInfo = function(events,beginX,endX) {
+
+        var timeframe = {};
+
+        timeframe.will = 0;
+        timeframe.wont = 0;
+        timeframe.probably = 0;
+
+        $scope.timeframe = timeframe;
+        $scope.beginX = beginX;
+        $scope.endX = endX;
+
+        events.forEach(function(event) {
+            if (event._color === "red") {
+                timeframe.wont += 1;
+            } else if (event._color === "green") {
+                timeframe.will += 1;
+            } else if (event._color === "orange") {
+                timeframe.probably += 1;
+            }
+        });
     };
 
 
