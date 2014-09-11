@@ -134,8 +134,9 @@ var registerPOST = function (req, res) {
             user.save();
             res.send(201);
         }
+
         else {
-            res.status.send('User with a provided user name already exists.');
+            res.status(409).send('User with a provided user name already exists.');
         }
     })
 };
@@ -158,9 +159,12 @@ var loginPOST = function (req, res) {
             }
         }
     });
-
-
 };
+
+var logoutGET = function (req, res) {
+    delete req.session.user_id;
+    res.send(201);
+}
 
 module.exports = {
     create: create,
@@ -176,5 +180,6 @@ module.exports = {
     registerPOST: registerPOST,
     loginGET: loginGET,
     loginPOST: loginPOST,
-    homeGET: homeGET
+    homeGET: homeGET,
+    logoutGET: logoutGET
 };
