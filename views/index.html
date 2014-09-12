@@ -9,14 +9,19 @@
 <script src="http://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true"></script>
 </head>
 
-<body>
+<body ng-controller="ApplicationController">
 <div class="container">
     <div class="header">
+
         <ul class="nav nav-pills pull-right">
             <li class="active"><a href="#/login">Log in</a></li>
             <li><a href="#/register">Register</a></li>
             <li><a href="/#/create">Create</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <span ng-show="currentUser">Welcome, {{currentUser}} <a href ng-click='logout()'>(Logout)</a></span>
         </ul>
+
         <h3 class="text-muted">Geopoll</h3>
     </div>
 
@@ -40,6 +45,7 @@
 <script src="js/services/LoginService.js"></script>
 <script src="js/services/RegisterService.js"></script>
 <script src="js/controllers/controllers.js"></script>
+<script src="js/controllers/ApplicationController.js"></script>
 <script src="js/controllers/CreateController.js"></script>
 <script src="js/controllers/HomeController.js"></script>
 <script src="js/controllers/PollController.js"></script>
