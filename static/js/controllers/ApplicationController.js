@@ -7,8 +7,17 @@ controllers.controller('ApplicationController', function ($scope, loginService) 
     };
 
     $scope.logout = function () {
-        loginService.logOut();
-        $scope.currentUser = null;
+
+        var onSuccess = function () {
+            console.log("[INFO] Successful logout");
+            $scope.currentUser = null;
+        };
+
+        var onFailure = function () {
+            console.log("[INFO] Logging out has failed")
+        }
+
+        loginService.logOut(onSuccess, onFailure);
     };
 
 });
