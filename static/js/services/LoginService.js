@@ -9,5 +9,9 @@ services.factory('loginService', function ($http) {
             .error(onFailure);
     };
 
+    service.logOut = function (onSuccess, onFailure) {
+        $http.get('/logout').success(onSuccess).error(onFailure);
+    }
+
     return service;
 });
