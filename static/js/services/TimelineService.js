@@ -249,6 +249,33 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
     };
 
+    service.getEventsInPixelRange = function(startX, endX) {
+        var events = [];
+        var evt, coords, startDate, endDate;
+
+        if (startX >= endX) {
+            events;
+        }
+        var hourBand = tl.getBand(0);
+
+
+
+        evt = {pageX : startX, pageY: 0};
+        coords = SimileAjax.DOM.getEventRelativeCoordinates(evt, hourBand._div);
+        startDate = hourBand.pixelOffsetToDate(coords.x);
+        evt = {pageX: endX, pageY: 0};
+        coords = SimileAjax.DOM.getEventRelativeCoordinates(evt, hourBand._div);
+        endDate = hourBand.pixelOffsetToDate(coords.x);
+
+        var eventsIterator = hourBand._eventSource.getEventIterator(startDate,endDate);
+
+        while(eventsIterator.hasNext()) {
+            events.push(eventsIterator.next());
+        }
+
+        return events;
+    };
+
 
     /**
      * Timeline modifications
@@ -317,11 +344,11 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
         theme.event.bubble.wikiStyler(divWiki);
         elmt.appendChild(divWiki);
 
-        var divVote = doc.createElement("div");
-        this.fillButtons(divVote);
-        elmt.appendChild(divVote);
-
-
+        if (this.voting) {
+            var divVote = doc.createElement("div");
+            this.fillButtons(divVote);
+            elmt.appendChild(divVote);
+        }
 
     };
 

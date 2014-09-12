@@ -7,15 +7,30 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         "updateSuccess": "Poll successfully updated!",
         "pollNotFound" : "No poll with provided id!",
         "declarationClosed" : "Declaration phase is closed now. Vote on selected terms",
-        "declarationClosedEditable" : "Declaration phase is closed now. Please choose terms to vote on"
+        "declarationClosedEditable" : "Declaration phase is closed now. Please choose terms to vote on",
+        "toggleTimeframeTrue" : "Toggle timeframe",
+        "toggleTimeframeFalse" : "Disable timeframe"
     };
 
     $scope.messages = messages;
+
+    var timeframe = {};
+
+    timeframe.will = 0;
+    timeframe.wont = 0;
+    timeframe.probably = 0;
+
+    $scope.timeframe = timeframe;
+
+    $scope.toggle = false;
+    $scope.toggleTimeframeMessage = messages.toggleTimeframeTrue;
 
     $scope.addPhase = false;
     $scope.userPolls = [];
     $scope.eventDisabled = false;
     $scope.declarationClosedMessage = messages.declarationClosed;
+    $scope.timeframeWidth = 0;
+    $scope.startX = 0;
 
     $scope.edit = function () {
 
@@ -96,6 +111,36 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         pollService.finishVotingPhase($routeParams.id, onSuccess, onFailure);
     };
 
+    $scope.toggleTimeframe = function() {
+        $scope.toggle = $scope.toggle === true ? false : true;
+        $scope.toggleTimeframeMessage = $scope.toggle === false ? messages.toggleTimeframeTrue : messages.toggleTimeframeFalse;
+        var events = timelineService.getEventsInPixelRange($scope.startX, $scope.endX);
+        $scope.updateTimeframeInfo(events)
+    };
+
+    $scope.updateTimeframeInfo = function(events,beginX,endX) {
+
+        var timeframe = {};
+
+        timeframe.will = 0;
+        timeframe.wont = 0;
+        timeframe.probably = 0;
+
+        $scope.timeframe = timeframe;
+        $scope.beginX = beginX;
+        $scope.endX = endX;
+
+        events.forEach(function(event) {
+            if (event._color === "red") {
+                timeframe.wont += 1;
+            } else if (event._color === "green") {
+                timeframe.will += 1;
+            } else if (event._color === "orange") {
+                timeframe.probably += 1;
+            }
+        });
+    };
+
 
     function getUserPolls() {
 
@@ -132,11 +177,13 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
                     timelineService.loadTerms(data.selected_terms);
                     timelineService.enableTimeline("asd",[]);
                     timelineService.setPoll(data,data._id);
+                    getUserPolls();
                 }, 0, false);
 
             } else if (data.isDeclarationClosed) {
                 $scope.eventDisabled = true;
                 $timeout(function() {
+                    Timeline.DefaultEventSource.Event.prototype.voting = true;
                     timelineService.loadTerms(data.selected_terms);
                 }, 0, false);
             } else {
