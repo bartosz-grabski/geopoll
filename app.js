@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var app = express();
 
 // all environments
+//app.use(express.compress());
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.html', require('ejs').renderFile);
