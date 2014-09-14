@@ -23,8 +23,8 @@ var create = function (req, res) {
     res.send(201);
 };
 
-var polls = function (req, res) {
-    Poll.find({}, function (err, polls) {
+var pollsGET = function (req, res) {
+    Poll.find({creator_id: req.session.user_id}, function (err, polls) {
         if (err) {
             console.log(err);
         }
@@ -395,7 +395,7 @@ var loggedUserGET = function (req, res) {
 
 module.exports = {
     create: create,
-    polls: polls,
+    pollsGET: pollsGET,
     view: view,
     modal: modal,
     index: index,

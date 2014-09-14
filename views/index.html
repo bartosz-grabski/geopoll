@@ -21,8 +21,17 @@
             <li><a href="#">About</a></li>
             <li><a href="#">Contact</a></li>
         </ul>
-        <span class="pull-right" style="margin-top:10px; margin-right:5px;" ng-show="currentUser">Welcome, {{currentUser}} <a
-                href ng-click='logout()'>(Logout)</a></span>
+
+        <span ng-show="currentUser" class="dropdown pull-right" style="margin-top:10px; margin-right:5px;"
+              on-toggle="toggled(open)">
+            Welcome, <a href class="dropdown-toggle">{{currentUser}}</a>
+            <ul class="dropdown-menu">
+                <li><a href>Your account</a></li>
+                <li><a href="/#/polls">Your polls</a></li>
+                <li class="divider"></li>
+                <li><a href ng-click='logout()'>Logout</a></li>
+            </ul>
+        </span>
 
 
         <h3 class="text-muted">Geopoll</h3>
@@ -46,6 +55,7 @@
 <script src="js/services/DatepickerService.js"></script>
 <script src="js/services/TimelineService.js"></script>
 <script src="js/services/LoginService.js"></script>
+<script src="js/services/UserPollsService.js"></script>
 <script src="js/services/RegisterService.js"></script>
 <script src="js/controllers/controllers.js"></script>
 <script src="js/controllers/ApplicationController.js"></script>
@@ -53,6 +63,7 @@
 <script src="js/controllers/HomeController.js"></script>
 <script src="js/controllers/PollController.js"></script>
 <script src="js/controllers/LoginController.js"></script>
+<script src="js/controllers/UserPollsCOntroller.js"></script>
 <script src="js/controllers/RegisterController.js"></script>
 <script src="js/directives/directives.js"></script>
 <script src="js/directives/timeframe.js"></script>
