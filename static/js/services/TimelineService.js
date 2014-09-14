@@ -1,4 +1,4 @@
-services.factory('timelineService', function ($http,$location,$window, modalService, pollService, $compile) {
+services.factory('timelineService', function ($http,$location,$window, modalService, pollService, $rootScope) {
 
 	var service = {};
 	var doubleClick = false;
@@ -29,7 +29,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 			'description' : description,
 			'color' : color,
             'caption' : groups,
-            'hoverText' : 'temp'
+            'image' : 'temp'
 		};
 	};
 
@@ -65,10 +65,10 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 			}
 			pollService.newTerm(pollId, newTerm, onNewTerm, function() {});
 		} else {
-            console.log();
 			var newEvent = eventFromData(start,end,serviceData.username,description,colors[availability], serviceData.groups);
 			serviceData.events.push({timeStart:start, timeEnd:end, type:availability});
 			eventSource1.loadJSON({ "events":[newEvent] , "dateTimeFormat":"iso8601"}, '.');
+            $rootScope.$broadcast('eventAdded');
 		}
 
 		
@@ -148,7 +148,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 					color : colors[userPoll.time_slots[j].type],
 					description : "",
                     caption: userPoll.chosen_groups ? userPoll.chosen_groups : [],
-                    hoverText: userPoll._id
+                    image: userPoll._id
 				};
 				events.push(userPollEvent);
 			}	
@@ -318,15 +318,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
         var title = this.getText();
         var link = this.getLink();
-        var image = this.getImage();
-
-        if (image != null) {
-            var img = doc.createElement("img");
-            img.src = image;
-
-            theme.event.bubble.imageStyler(img);
-            elmt.appendChild(img);
-        }
 
         var divTitle = doc.createElement("div");
         var textTitle = doc.createTextNode(title);

@@ -129,20 +129,21 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         $scope.endX = endX;
 
         var usedIds = {};
-
+        console.log(events);
         events.forEach(function(event) {
+
             if (event._color === "red") {
                 timeframe.wont += 1;
             } else if (event._color === "green") {
                 timeframe.will += 1;
                 if (event._title) { //tile used to hold groups, hoverText used to hold userPoll id
                     event._title.forEach(function(group) {
-                        if (timeframe.groups[group[0]] && usedIds[event.hoverText]) {
+                        if (timeframe.groups[group[0]] && !usedIds[event._image]) {
                             timeframe.groups[group[0]] += 1;
-                            usedIds[event.hoverText] = true;
+                            usedIds[event._image] = true;
                         } else {
-                            timeframe.groups[group[0]] = 1;
-                            usedIds[event.hoverText] = true;
+                            timeframe.groups[group[0]] = timeframe.groups[group[0]] ? timeframe.groups[group[0]] : 1;
+                            usedIds[event._image] = true;
                         }
                     });
                 }
@@ -282,6 +283,12 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     $scope.newEvent = newUserPoll;  // when declaration is closed then it's swapped for newTerm, saveTerm
     $scope.saveEvent = saveUserPoll;
+
+    $scope.$on("eventAdded",function(event) {
+        var events = timelineService.getEventsInPixelRange($scope.startX, $scope.endX);
+        $scope.updateTimeframeInfo(events,$scope.startX, $scope.endX);
+    });
+
     timelineService.load("tl");
     timelineService.setScope($scope);
     timelineService.addOnScrollListener(0,updateTimeframeOnScroll);
