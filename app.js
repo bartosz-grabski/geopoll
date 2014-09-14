@@ -52,3 +52,4 @@ app.post('/register', routes.registerPOST);
 app.get('/login', routes.loginGET);
 app.post('/login', routes.loginPOST);
 app.get('/logout', routes.logoutGET);
+app.get('/loggedUser', routes.loggedUserGET);

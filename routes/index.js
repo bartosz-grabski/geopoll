@@ -43,14 +43,13 @@ var pollGET = function (req, res) {
         var pollToken = Poll.extractToken(req.param('id'));
 
         Poll.findById(pollID, function (err, poll) {
-			if(poll) {
+            if (poll) {
 
                 var pollObj = poll.toObject();
                 if (pollObj.is_closed) {
-                    res.send({is_closed:true});
+                    res.send({is_closed: true});
                     return;
                 }
-
 
 
                 var isDeclarationClosed = pollObj.is_declaration_closed;
@@ -59,7 +58,7 @@ var pollGET = function (req, res) {
                 if (pollObj.end_time < today) {
                     poll.is_closed = true;
                     poll.save();
-                    res.send({is_closed:true});
+                    res.send({is_closed: true});
                 }
 
                 pollObj.isDeclarationClosed = isDeclarationClosed;
@@ -67,15 +66,15 @@ var pollGET = function (req, res) {
                 if (pollObj.declaration_end_time < today) {
                     pollObj.is_declaration_closed = true;
                     if (isDeclarationClosed === false) {
-                        Poll.findByIdAndUpdate(pollID,pollObj,null, function(err,succ) {
+                        Poll.findByIdAndUpdate(pollID, pollObj, null, function (err, succ) {
                             if (err) {
                                 console.log(err);
                             } else {
-                                console.log("successfully updated declaration_closed field for poll = "+pollID);
+                                console.log("successfully updated declaration_closed field for poll = " + pollID);
                             }
                         });
                     }
-                } 
+                }
 
                 pollObj.can_edit = false;
                 if (pollToken == pollObj.creation_token) {
@@ -167,7 +166,7 @@ var addTerm = function (req, res) {
 
     var pollId = Poll.extractID(req.param('poll_id'));
 
-    Poll.findById(pollId, function(err, poll) {
+    Poll.findById(pollId, function (err, poll) {
         if (err) {
             res.send(500);
         } else if (!poll.is_declaration_closed || !poll) {
@@ -188,7 +187,7 @@ var addTerm = function (req, res) {
             poll.save();
 
             res.send(201, term);
-         }
+        }
     });
 
 };
@@ -198,7 +197,7 @@ var deleteTerm = function (req, res) {
     var pollId = Poll.extractID(req.param('poll_id'));
     var termId = req.param('term_id');
 
-    Poll.findById(pollId, function(err, poll) {
+    Poll.findById(pollId, function (err, poll) {
         if (err) {
             res.send(500);
         } else if (!poll.is_declaration_closed || !poll) {
@@ -212,10 +211,10 @@ var deleteTerm = function (req, res) {
                     }
                 }
 
-                poll.selected_terms.splice(index,1);
+                poll.selected_terms.splice(index, 1);
                 poll.markModified("selected_terms");    //otherwise doesn't work (?!)
-                poll.save(function(err,poll) {
-                    if(err) {
+                poll.save(function (err, poll) {
+                    if (err) {
                         res.send(400, err);
                     } else {
                         res.send(201);
@@ -236,7 +235,7 @@ var voteOnTerm = function (req, res) {
     var pollId = Poll.extractID(req.param('poll_id'));
     var termId = req.param('term_id');
 
-    Poll.findById(pollId, function(err, poll) {
+    Poll.findById(pollId, function (err, poll) {
         if (err) {
             res.send(500);
         } else if (!poll.is_declaration_closed || !poll) {
@@ -250,12 +249,14 @@ var voteOnTerm = function (req, res) {
                         }
                         poll.selected_terms[i].votedFor += 1;
                         break;
-                    };
-                };
+                    }
+                    ;
+                }
+                ;
 
                 poll.markModified("selected_terms");    //otherwise doesn't work (?!)
-                poll.save(function(err,poll) {
-                    if(err) {
+                poll.save(function (err, poll) {
+                    if (err) {
                         res.send(400, err);
                     } else {
                         res.send(201);
@@ -270,39 +271,39 @@ var voteOnTerm = function (req, res) {
 
 };
 
-var pollPOST = function(req,res) {
+var pollPOST = function (req, res) {
     if (req.body.operation) {
         var operation = req.body.operation;
         var pollId = Poll.extractID(req.param('poll_id'));
         if (operation === "FINISH_VOTING_PHASE") {
-            Poll.findById(pollId, function(err,poll) {
-               if (err) {
-                   res.send(500);
-               }
-               poll.is_closed = true;
-               poll.save();
-               _sendClosedMail(poll);
-               res.send(200);
+            Poll.findById(pollId, function (err, poll) {
+                if (err) {
+                    res.send(500);
+                }
+                poll.is_closed = true;
+                poll.save();
+                _sendClosedMail(poll);
+                res.send(200);
             });
         } else if (operation === "FINISH_DECLARATION_PHASE") {
-            Poll.findById(pollId, function(err, poll) {
-               if(err) {
-                   res.send(500);
-               }
-               poll.is_declaration_closed = true;
-               poll.save();
-               _sendDeclarationClosedMail(poll);
-               res.send(200);
+            Poll.findById(pollId, function (err, poll) {
+                if (err) {
+                    res.send(500);
+                }
+                poll.is_declaration_closed = true;
+                poll.save();
+                _sendDeclarationClosedMail(poll);
+                res.send(200);
             });
         } else {
-            res.send(400, { "message" : "unknown operation type"});
+            res.send(400, { "message": "unknown operation type"});
         }
     } else {
         res.send(400);
     }
 };
 
-var _sendClosedMail = function(poll) {
+var _sendClosedMail = function (poll) {
 
     var locals = {
         email: poll.creator_mail,
@@ -313,12 +314,12 @@ var _sendClosedMail = function(poll) {
 
     //TODO - notify user about results in email
 
-    emailService.send('closed_poll', locals, function (err, responseStatus,html,text) {
+    emailService.send('closed_poll', locals, function (err, responseStatus, html, text) {
 
     });
 };
 
-var _sendDeclarationClosedMail = function(poll) {
+var _sendDeclarationClosedMail = function (poll) {
 
     var notificationType = poll.notification_type;
 
@@ -330,7 +331,7 @@ var _sendDeclarationClosedMail = function(poll) {
         creatorName: poll.creator_name
     };
 
-    emailService.send('closed_decl_poll', locals, function (err, responseStatus,html,text) {
+    emailService.send('closed_decl_poll', locals, function (err, responseStatus, html, text) {
 
     });
 };
@@ -382,6 +383,13 @@ var loginPOST = function (req, res) {
 var logoutGET = function (req, res) {
     delete req.session.user_id;
     res.send(201);
+};
+
+var loggedUserGET = function (req, res) {
+    User.findById(req.session.user_id, function (err, user) {
+        res.send(user);
+        return;
+    });
 }
 
 module.exports = {
@@ -403,5 +411,6 @@ module.exports = {
     loginGET: loginGET,
     loginPOST: loginPOST,
     homeGET: homeGET,
-    logoutGET: logoutGET
+    logoutGET: logoutGET,
+    loggedUserGET: loggedUserGET
 };

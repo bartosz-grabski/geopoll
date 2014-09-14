@@ -1,6 +1,11 @@
 controllers.controller('ApplicationController', function ($scope, loginService) {
 
-    $scope.currentUser = null;
+    loginService.getLoggedInUser(function (res) {
+        $scope.currentUser = res.user_name;
+    }, function () {
+        $scope.currentUser = null
+    });
+
 
     $scope.setCurrentUser = function (user) {
         $scope.currentUser = user;
