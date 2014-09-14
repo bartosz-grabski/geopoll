@@ -129,7 +129,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         $scope.endX = endX;
 
         var usedIds = {};
-        console.log(events);
+
         events.forEach(function(event) {
 
             if (event._color === "red") {

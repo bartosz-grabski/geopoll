@@ -37,7 +37,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	//thus it does not resolve username properly (only reffering to the value it first encountered)
 	var onEventConfirmed = function(result) {
 
-		console.log(serviceData.username);
 		console.log("[INFO] Event creation confirmed");
 		var duration = result.duration;
 		var start = result.selectedTimestamp;
@@ -54,7 +53,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
                 poll.selected_terms = [];
                 poll.selected_terms.push(data);
             }
-            console.log(poll.selected_terms);
 			eventSource1.loadJSON({ "events":[newTerm] , "dateTimeFormat":"iso8601"}, '.');
 		}
 
@@ -133,7 +131,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		var events = [];
 		for (var i = 0; i < userPolls.length; i++) {
 			var userPoll = userPolls[i];
-			console.log(userPoll);
 			for (var j = 0; j < userPoll.time_slots.length; j++) {
 
 				var timeStart = new Date(userPoll.time_slots[j].timeStart).toISOString();
@@ -182,7 +179,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
 
 	service.loadEvents = function(userPolls) {
-		console.log(userPolls);
 		userPollEvents = userPollsToEvents(userPolls);
 		eventSource1.loadJSON({ "events":userPollEvents , "dateTimeFormat":"iso8601"}, '.');
 		tl.layout();
@@ -191,7 +187,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	service.loadTerms = function(terms) {
 
 		termEvents = termsToEvents(terms);
-		console.log(termEvents);
 		eventSource1.loadJSON({"events":termEvents, "dateTimeFormat":"iso8601"},".");
 		tl.layout();
 
@@ -206,7 +201,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	};
 
 	service.enableTimeline = function(username, groups) {
-		console.log(username);
 		doubleClick = true;
 		serviceData.username = username;
 		serviceData.groups = groups;
