@@ -4,12 +4,14 @@
             <th>Name</th>
             <th>StartDate</th>
             <th>EndDate</th>
+            <th>Description</th>
         </tr>
 
         <tr data-ng-repeat="poll in polls">
             <td><a ng-href="/#/poll/{{poll._id}}{{poll.creation_token}}">{{poll.name}}</a></td>
             <td>{{poll.start_time}}</td>
             <td>{{poll.end_time}}</td>
+            <td>{{poll.description}}</td>
         </tr>
     </table>
 </div>
