@@ -16,6 +16,7 @@
 							<li class="list-group-item">Description : {{poll.description}}</li>
 							<li class="list-group-item">Creator : {{poll.creator_mail}}</li>
 						</ul>
+
 					</div>
 				</div>
 			</div>
@@ -31,6 +32,11 @@
                             <li class="list-group-item" style="color: darkgreen">Will : {{timeframe.will}}</li>
                             <li class="list-group-item" style="color: darkred">Won't : {{timeframe.wont}}</li>
                             <li class="list-group-item" style="color: #b8860b">Probably : {{timeframe.probably}}</li>
+                            <li class="list-group-item">
+                                <button type="button" class="btn btn-info" style="margin-right: 10px;" ng-repeat="(group,max) in timeframe.groups">
+                                    {{group}} : {{timeframe.groups[group]}}
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -149,6 +149,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 		$scope.modal = {};
 		$scope.modal.duration = 1;
 		$scope.modal.selectedTimestamp = selectedTimestamp;
+        $scope.modal.availability = "yes";
 
 		$scope.modal.isTerm = isTerm;
 
@@ -156,10 +157,10 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 
 			var result = {
 				duration : $scope.modal.duration,
-				selectedTimestamp : selectedTimestamp,
+				selectedTimestamp : selectedTimestamp
 			};
             if (!isTerm) {
-                result.availability = $scope.modal.availability;
+                result.availability = $scope.modal.availability ? $scope.modal.availability : "yes";
             }
 			$modalInstance.close(result);
 		};
@@ -171,7 +172,7 @@ services.factory('modalService', function ($http,$location,$window,$modal,$log, 
 	};
 
 
-	service.newUserEventModal = function(onConfirm, onCancel, selectedTimestamp, isTermModal) {	
+	service.newUserEventModal = function(onConfirm, onCancel, selectedTimestamp, isTermModal) {
 
 		var modalInstance = $modal.open({
 			templateUrl: 'views/modals/event',

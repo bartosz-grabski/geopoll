@@ -2,8 +2,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
 	var service = {};
 	var doubleClick = false;
-	var username = "asd";
-	var groups = [];
 	var tl;
 	var eventSource1;
 	var serviceData = {
@@ -23,13 +21,15 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		"maybe" : "orange"
 	};
 
-	var eventFromData = function(startTime, endTime, title, description, color) {
+	var eventFromData = function(startTime, endTime, title, description, color, groups) {
 		return {
 			'start': startTime.toISOString(),
 			'end' : endTime.toISOString(),
 			'title' : title,
 			'description' : description,
-			'color' : color
+			'color' : color,
+            'caption' : groups,
+            'hoverText' : 'temp'
 		};
 	};
 
@@ -47,7 +47,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		end.setHours(end.getHours()+duration);
 
 		var onNewTerm = function(data) {
-			var newTerm = eventFromData(start,end,"Chosen term", data.id, "blue");
+			var newTerm = eventFromData(start,end,"Chosen term", data.id, "blue",[]);
             if (poll && poll.selected_terms) {
                 poll.selected_terms.push(data);
             } else if (!poll.selected_terms) {
@@ -65,7 +65,8 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 			}
 			pollService.newTerm(pollId, newTerm, onNewTerm, function() {});
 		} else {
-			var newEvent = eventFromData(start,end,serviceData.username,description,colors[availability]);
+            console.log();
+			var newEvent = eventFromData(start,end,serviceData.username,description,colors[availability], serviceData.groups);
 			serviceData.events.push({timeStart:start, timeEnd:end, type:availability});
 			eventSource1.loadJSON({ "events":[newEvent] , "dateTimeFormat":"iso8601"}, '.');
 		}
@@ -145,7 +146,9 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 					//end: "Jun 9 2014 21:30:00 GMT",
 					title : userPoll.user_name,
 					color : colors[userPoll.time_slots[j].type],
-					description : ""
+					description : "",
+                    caption: userPoll.chosen_groups ? userPoll.chosen_groups : [],
+                    hoverText: userPoll._id
 				};
 				events.push(userPollEvent);
 			}	
@@ -179,9 +182,8 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
 
 	service.loadEvents = function(userPolls) {
-		
+		console.log(userPolls);
 		userPollEvents = userPollsToEvents(userPolls);
-		console.log(userPollEvents);
 		eventSource1.loadJSON({ "events":userPollEvents , "dateTimeFormat":"iso8601"}, '.');
 		tl.layout();
 	};
@@ -276,6 +278,16 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
         return events;
     };
 
+    /**
+     *
+     * @param band index of a band, starting from 0 (top band)
+     * @param listener listener function
+     */
+    service.addOnScrollListener = function(band, listener) {
+        var band = tl.getBand(0)
+        band.addOnScrollListener(listener);
+    };
+
 
     /**
      * Timeline modifications
@@ -296,7 +308,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
         if (doubleClick) {
             var coords = SimileAjax.DOM.getEventRelativeCoordinates(evt, innerFrame);
             var selectedTimestamp = this.pixelOffsetToDate(coords.x);
-            modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp, serviceData.groups);
+            modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp, isTerm);
         }
     };
 

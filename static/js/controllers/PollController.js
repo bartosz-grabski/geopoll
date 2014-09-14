@@ -36,9 +36,6 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
         var onConfirm = function (data) {
 
-            console.log(data);
-
-            console.log($routeParams.id);
             pollService.updatePoll($routeParams.id, data, function () {
                     $scope.poll = data;
                     $scope.pollSuccess = true;
@@ -115,30 +112,46 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
         $scope.toggle = $scope.toggle === true ? false : true;
         $scope.toggleTimeframeMessage = $scope.toggle === false ? messages.toggleTimeframeTrue : messages.toggleTimeframeFalse;
         var events = timelineService.getEventsInPixelRange($scope.startX, $scope.endX);
-        $scope.updateTimeframeInfo(events)
+        $scope.updateTimeframeInfo(events,$scope.startX, $scope.endX);
     };
 
-    $scope.updateTimeframeInfo = function(events,beginX,endX) {
+    $scope.updateTimeframeInfo = function(events,startX,endX) {
 
         var timeframe = {};
 
         timeframe.will = 0;
         timeframe.wont = 0;
         timeframe.probably = 0;
+        timeframe.groups = {};
 
         $scope.timeframe = timeframe;
-        $scope.beginX = beginX;
+        $scope.startX = startX;
         $scope.endX = endX;
+
+        var usedIds = {};
 
         events.forEach(function(event) {
             if (event._color === "red") {
                 timeframe.wont += 1;
             } else if (event._color === "green") {
                 timeframe.will += 1;
+                if (event._title) { //tile used to hold groups, hoverText used to hold userPoll id
+                    event._title.forEach(function(group) {
+                        if (timeframe.groups[group[0]] && usedIds[event.hoverText]) {
+                            timeframe.groups[group[0]] += 1;
+                            usedIds[event.hoverText] = true;
+                        } else {
+                            timeframe.groups[group[0]] = 1;
+                            usedIds[event.hoverText] = true;
+                        }
+                    });
+                }
             } else if (event._color === "orange") {
                 timeframe.probably += 1;
             }
+
         });
+
     };
 
 
@@ -215,7 +228,7 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
     		$scope.groups = result.groups;
     		$scope.addPhase = true;
     		console.log("[INFO] The newUserPoll modal was confirmed");
-    		timelineService.enableTimeline(username);
+    		timelineService.enableTimeline(result.username, result.groups);
     	}, function() {
     		console.log("[INFO] The newUserPoll modal was dismissed");
     	}, $scope.poll.required_groups);
@@ -258,10 +271,20 @@ controllers.controller('PollController', function ($scope, $rootScope, $location
 
     };
 
+    function updateTimeframeOnScroll(evt) {
+        var events = timelineService.getEventsInPixelRange($scope.startX, $scope.endX);
+        if (!$scope.$$phase) { //TODO
+            $scope.$apply(function() {
+                $scope.updateTimeframeInfo(events,$scope.startX, $scope.endX);
+            });
+        }
+    }
+
     $scope.newEvent = newUserPoll;  // when declaration is closed then it's swapped for newTerm, saveTerm
     $scope.saveEvent = saveUserPoll;
     timelineService.load("tl");
     timelineService.setScope($scope);
+    timelineService.addOnScrollListener(0,updateTimeframeOnScroll);
 
     getPollInfo();
     

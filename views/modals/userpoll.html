@@ -12,8 +12,8 @@
 				required id="username"/>
 			</div>
 		</div>
-		<div class="form-group">
-			<label for="groups" class="col-sm-3 control-label">Name</label>
+		<div class="form-group" ng-show="modal.groups && modal.groups.length > 0">
+			<label class="col-sm-3 control-label">Name</label>
 			<div class="col-sm-4">
 				<select name="groups" ng-model="modal.selectedGroups" multiple ng-options="group[0] for group in modal.groups">
 				</select>
