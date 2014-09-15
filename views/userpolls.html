@@ -1,5 +1,9 @@
 <div>
-    <table class="table table-striped table-condensed table-hover">
+
+    <div ng-show="!thereIsAtLeastOneUserPoll">
+        <h3>Oops, it seems you haven't created any poll yet.</br></br> <a href="/#/create">Start creating!</a></h3>
+    </div>
+    <table ng-show="thereIsAtLeastOneUserPoll" class="table table-striped table-condensed table-hover">
         <tr>
             <th>Name</th>
             <th>StartDate</th>
