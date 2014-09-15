@@ -13,8 +13,8 @@
 
         <tr data-ng-repeat="poll in polls">
             <td><a ng-href="/#/poll/{{poll._id}}{{poll.creation_token}}">{{poll.name}}</a></td>
-            <td>{{poll.start_time}}</td>
-            <td>{{poll.end_time}}</td>
+            <td>{{poll.start_time.replace("T", " (").replace(":00.000Z", ")")}}</td>
+            <td>{{poll.end_time.replace("T", " (").replace(":00.000Z", ")")}}</td>
             <td>{{poll.description}}</td>
         </tr>
     </table>
