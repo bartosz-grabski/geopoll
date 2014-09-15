@@ -1,9 +1,7 @@
-services.factory('timelineService', function ($http,$location,$window, modalService, pollService, $compile) {
+services.factory('timelineService', function ($http,$location,$window, modalService, pollService, $rootScope) {
 
 	var service = {};
 	var doubleClick = false;
-	var username = "asd";
-	var groups = [];
 	var tl;
 	var eventSource1;
 	var serviceData = {
@@ -23,13 +21,15 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		"maybe" : "orange"
 	};
 
-	var eventFromData = function(startTime, endTime, title, description, color) {
+	var eventFromData = function(startTime, endTime, title, description, color, groups) {
 		return {
 			'start': startTime.toISOString(),
 			'end' : endTime.toISOString(),
 			'title' : title,
 			'description' : description,
-			'color' : color
+			'color' : color,
+            'caption' : groups,
+            'image' : 'temp'
 		};
 	};
 
@@ -37,7 +37,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	//thus it does not resolve username properly (only reffering to the value it first encountered)
 	var onEventConfirmed = function(result) {
 
-		console.log(serviceData.username);
 		console.log("[INFO] Event creation confirmed");
 		var duration = result.duration;
 		var start = result.selectedTimestamp;
@@ -47,14 +46,13 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		end.setHours(end.getHours()+duration);
 
 		var onNewTerm = function(data) {
-			var newTerm = eventFromData(start,end,"Chosen term", data.id, "blue");
+			var newTerm = eventFromData(start,end,"Chosen term", data.id, "blue",[]);
             if (poll && poll.selected_terms) {
                 poll.selected_terms.push(data);
             } else if (!poll.selected_terms) {
                 poll.selected_terms = [];
                 poll.selected_terms.push(data);
             }
-            console.log(poll.selected_terms);
 			eventSource1.loadJSON({ "events":[newTerm] , "dateTimeFormat":"iso8601"}, '.');
 		}
 
@@ -65,9 +63,10 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 			}
 			pollService.newTerm(pollId, newTerm, onNewTerm, function() {});
 		} else {
-			var newEvent = eventFromData(start,end,serviceData.username,description,colors[availability]);
+			var newEvent = eventFromData(start,end,serviceData.username,description,colors[availability], serviceData.groups);
 			serviceData.events.push({timeStart:start, timeEnd:end, type:availability});
 			eventSource1.loadJSON({ "events":[newEvent] , "dateTimeFormat":"iso8601"}, '.');
+            $rootScope.$broadcast('eventAdded');
 		}
 
 		
@@ -132,7 +131,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 		var events = [];
 		for (var i = 0; i < userPolls.length; i++) {
 			var userPoll = userPolls[i];
-			console.log(userPoll);
 			for (var j = 0; j < userPoll.time_slots.length; j++) {
 
 				var timeStart = new Date(userPoll.time_slots[j].timeStart).toISOString();
@@ -145,7 +143,9 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 					//end: "Jun 9 2014 21:30:00 GMT",
 					title : userPoll.user_name,
 					color : colors[userPoll.time_slots[j].type],
-					description : ""
+					description : "",
+                    caption: userPoll.chosen_groups ? userPoll.chosen_groups : [],
+                    image: userPoll._id
 				};
 				events.push(userPollEvent);
 			}	
@@ -179,9 +179,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
 
 	service.loadEvents = function(userPolls) {
-		
 		userPollEvents = userPollsToEvents(userPolls);
-		console.log(userPollEvents);
 		eventSource1.loadJSON({ "events":userPollEvents , "dateTimeFormat":"iso8601"}, '.');
 		tl.layout();
 	};
@@ -189,7 +187,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	service.loadTerms = function(terms) {
 
 		termEvents = termsToEvents(terms);
-		console.log(termEvents);
 		eventSource1.loadJSON({"events":termEvents, "dateTimeFormat":"iso8601"},".");
 		tl.layout();
 
@@ -204,7 +201,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 	};
 
 	service.enableTimeline = function(username, groups) {
-		console.log(username);
 		doubleClick = true;
 		serviceData.username = username;
 		serviceData.groups = groups;
@@ -276,6 +272,16 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
         return events;
     };
 
+    /**
+     *
+     * @param band index of a band, starting from 0 (top band)
+     * @param listener listener function
+     */
+    service.addOnScrollListener = function(band, listener) {
+        var band = tl.getBand(0)
+        band.addOnScrollListener(listener);
+    };
+
 
     /**
      * Timeline modifications
@@ -296,7 +302,7 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
         if (doubleClick) {
             var coords = SimileAjax.DOM.getEventRelativeCoordinates(evt, innerFrame);
             var selectedTimestamp = this.pixelOffsetToDate(coords.x);
-            modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp, serviceData.groups);
+            modalService.newUserEventModal(onEventConfirmed,onEventCanceled,selectedTimestamp, isTerm);
         }
     };
 
@@ -306,15 +312,6 @@ services.factory('timelineService', function ($http,$location,$window, modalServ
 
         var title = this.getText();
         var link = this.getLink();
-        var image = this.getImage();
-
-        if (image != null) {
-            var img = doc.createElement("img");
-            img.src = image;
-
-            theme.event.bubble.imageStyler(img);
-            elmt.appendChild(img);
-        }
 
         var divTitle = doc.createElement("div");
         var textTitle = doc.createTextNode(title);

@@ -20,8 +20,8 @@ directives.directive("timeframe", function($document, timelineService) {
             maxWidth: timelineWidth
         };
 
-        $scope.beginX = startX;
-        $scope.endX = startX + timeframeWidth;
+        $scope.beginX = startX + offsetX;
+        $scope.endX = startX + offsetX + timeframeWidth;
 
         $element.resizable(resizeConfig);
 
