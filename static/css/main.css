@@ -10,6 +10,12 @@ body {
     cursor: pointer;
 }
 
+@media (min-width: 768px) {
+    .container {
+        max-width: 730px;
+    }
+}
+
 .header,
 .marketing,
 .footer {
